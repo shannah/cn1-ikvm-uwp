@@ -81,5 +81,17 @@
         </exec>
     </target>
     
+    <target name="compile-all" depends="get-openjdk" description="Compile IKVM from source">
+        <exec executable="nant" dir=".">
+            <arg value="-t:net-2.0"/>
+        </exec>
+    </target>
+    
+    <target name="compile-runtime" description="Compile IKVM Runtime Only">
+        <exec executable="nant" dir="runtime">
+            <arg value="-t:net-2.0"/>
+            <arg value="winrt"/>
+        </exec>
+    </target>
     
 </project>
