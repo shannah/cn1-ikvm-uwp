@@ -73,7 +73,7 @@
     <target name="file-checks">
         <available file="../openjdk-8-b132"  property="openjdk.found"/>
     </target>
-    <target name="get-openjdk" depends="file-checks" unless="openjdk.found" descriptioh="Download OpenJDK source for building IKVM from source">
+    <target name="get-openjdk" depends="file-checks" unless="openjdk.found" description="Download OpenJDK source for building IKVM from source">
         <exec executable="git">
             <arg value="clone"/>
             <arg value="https://github.com/shannah/cn1-ikvm-openjdk-8-b132.git"/>
