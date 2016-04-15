@@ -2413,12 +2413,12 @@ class Thread implements Runnable {
         // throw new Error("NotImplemented");
         cli.IKVM.Runtime.NativeThread nativeThread = this.nativeThread;
         if (nativeThread != null) {
-            try {
-                if (false) throw new cli.System.Threading.ThreadStateException();
+            //try {
+               // if (false) throw new cli.System.Threading.ThreadStateException();
                 nativeThread.set_Priority(mapJavaPriorityToClr(newPriority));
-            }
-            catch (cli.System.Threading.ThreadStateException _) {
-            }
+            //}
+            //catch (cli.System.Threading.ThreadStateException _) {
+            //}
         }
     }
 
@@ -2584,7 +2584,7 @@ class Thread implements Runnable {
         Thread t = currentThread();
         t.enterInterruptableWait(timeout != 0);
         try {
-            if (false) throw new cli.System.Threading.ThreadInterruptedException();
+            //if (false) throw new cli.System.Threading.ThreadInterruptedException();
             if (timeout == 0 || timeout > 922337203685476L) {
                 cli.System.Threading.Monitor.Wait(o);
             }
@@ -2596,8 +2596,8 @@ class Thread implements Runnable {
                 cli.System.Threading.Monitor.Wait(o, (int)Math.min(timeout, Integer.MAX_VALUE));
             }
         }
-        catch (cli.System.Threading.ThreadInterruptedException _) {
-        }
+        //catch (cli.System.Threading.ThreadInterruptedException _) {
+        //}
         finally {
             t.leaveInterruptableWait();
         }

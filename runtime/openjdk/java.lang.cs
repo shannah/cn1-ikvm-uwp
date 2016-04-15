@@ -790,9 +790,9 @@ static class Java_java_lang_ClassLoader_00024NativeLibrary
 	[SecuritySafeCritical]
 	private static void doLoad(object thisNativeLibrary, string name)
 	{
-		java.lang.ClassLoader.NativeLibrary lib = (java.lang.ClassLoader.NativeLibrary)thisNativeLibrary;
-		lib.handle = IKVM.Runtime.JniHelper.LoadLibrary(name, TypeWrapper.FromClass(java.lang.ClassLoader.NativeLibrary.getFromClass()).GetClassLoader());
-		lib.loaded = true;
+		//java.lang.ClassLoader.NativeLibrary lib = (java.lang.ClassLoader.NativeLibrary)thisNativeLibrary;
+		//lib.handle = IKVM.Runtime.JniHelper.LoadLibrary(name, TypeWrapper.FromClass(java.lang.ClassLoader.NativeLibrary.getFromClass()).GetClassLoader());
+		//lib.loaded = true;
 	}
 #endif
 
@@ -806,12 +806,12 @@ static class Java_java_lang_ClassLoader_00024NativeLibrary
 	public static void unload(object thisNativeLibrary, string name, bool isBuiltin)
 	{
 #if !FIRST_PASS
-		java.lang.ClassLoader.NativeLibrary lib = (java.lang.ClassLoader.NativeLibrary)thisNativeLibrary;
-		long handle = Interlocked.Exchange(ref lib.handle, 0);
-		if (handle != 0)
-		{
-			IKVM.Runtime.JniHelper.UnloadLibrary(handle, TypeWrapper.FromClass(java.lang.ClassLoader.NativeLibrary.getFromClass()).GetClassLoader());
-		}
+		//java.lang.ClassLoader.NativeLibrary lib = (java.lang.ClassLoader.NativeLibrary)thisNativeLibrary;
+		//long handle = Interlocked.Exchange(ref lib.handle, 0);
+		//if (handle != 0)
+		//{
+	//		IKVM.Runtime.JniHelper.UnloadLibrary(handle, TypeWrapper.FromClass(java.lang.ClassLoader.NativeLibrary.getFromClass()).GetClassLoader());
+		//}
 #endif
 	}
 
