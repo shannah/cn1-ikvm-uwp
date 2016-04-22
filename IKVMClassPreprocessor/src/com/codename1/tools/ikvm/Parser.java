@@ -188,7 +188,7 @@ public class Parser {
             changed = true;
             System.out.println("Transforming "+methodsToAdd.size()+" synchronized methods in "+classNode.name);
             classNode.methods.addAll(methodsToAdd);
-            ClassWriter w = new ClassWriter(0);
+            ClassWriter w = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
             classNode.accept(w);
             return w.toByteArray();
         } else {
