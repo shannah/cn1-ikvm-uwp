@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -85,25 +86,35 @@ public class Parser {
                 if (!tryCatchFound[0]) {
                     continue;
                 }
+                
+                System.out.println("Instructions: "+Arrays.toString(methodNode.instructions.toArray()));
+                
+                
                 System.out.println("Transforming method "+methodNode.name+" of class "+classNode.name);
                 MethodDescriptor md = new MethodDescriptor(methodNode.name, methodNode.desc);
-                methodNode.access = methodNode.access & ~Opcodes.ACC_SYNCHRONIZED;
+                //methodNode.access = methodNode.access & ~Opcodes.ACC_SYNCHRONIZED;
                 String privateMethodName = (md.constructor?"___cn1init__":methodNode.name) + "___cn1sync"+(methodNum);
                 MethodNode syncMethod = new MethodNode(
-                        methodNode.access | Opcodes.ACC_SYNCHRONIZED | Opcodes.ACC_PRIVATE, 
+                        methodNode.access, 
                         methodNode.name, methodNode.desc,
                         methodNode.signature,
                         (String[]) methodNode.exceptions.toArray(new String[methodNode.exceptions.size()]));
                 
                 methodNode.name = privateMethodName;
+                methodNode.access = (methodNode.access | Opcodes.ACC_PRIVATE) & ~Opcodes.ACC_PUBLIC & ~Opcodes.ACC_PROTECTED & ~Opcodes.ACC_SYNCHRONIZED;
+
                 int argIndex=0;
                 if (!md.staticMethod) {
-                    syncMethod.instructions.add(new VarInsnNode(Opcodes.AALOAD, argIndex++));
+                    syncMethod.instructions.add(new VarInsnNode(Opcodes.ALOAD, argIndex++));
                 }
                 
                 
                 for (ByteCodeMethodArg arg : md.arguments) {
-                    switch (arg.type) {
+                    char typeChar = arg.type;
+                    if (arg.dim > 0) {
+                        typeChar = 'L';
+                    }
+                    switch (typeChar) {
                         case 'L':
                             syncMethod.instructions.add(new VarInsnNode(Opcodes.ALOAD, argIndex++));
                             break;
@@ -135,7 +146,11 @@ public class Parser {
                 }
                 
                 if (md.returnType != null) {
-                    switch (md.returnType.type) {
+                    char typeChar = md.returnType.type;
+                    if (md.returnType.dim > 0) {
+                        typeChar = 'L';
+                    }
+                    switch (typeChar) {
                         case 'L':
                             syncMethod.instructions.add(new InsnNode(Opcodes.ARETURN));
                             break;
@@ -156,6 +171,7 @@ public class Parser {
                            syncMethod.instructions.add(new InsnNode(Opcodes.DRETURN));
                             break;
                         case 'V':
+                            syncMethod.instructions.add(new InsnNode(Opcodes.DRETURN));
                             break;
                         default:
                             throw new IllegalArgumentException("Unsupported argument type "+md.returnType.type);
@@ -278,7 +294,8 @@ public class Parser {
                         currentArrayDim++;
                         continue;
                     case 'L':
-                        
+                        int idx = desc.indexOf(';', i);
+                        i = idx;
                     case 'I':
                         
                     case 'J':
