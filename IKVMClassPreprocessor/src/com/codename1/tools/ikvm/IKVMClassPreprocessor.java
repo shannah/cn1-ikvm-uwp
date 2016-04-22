@@ -76,8 +76,10 @@ public class IKVMClassPreprocessor {
                 try {
                     zos.close();
                 } catch (Exception ex){}
-                Files.move(tmpOut.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                
             }
+            zip.close();
+            Files.move(tmpOut.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } else {
             System.out.println("Skipping file "+f);
         }
