@@ -30,7 +30,8 @@ public class IKVMClassPreprocessor {
      */
     public static void main(String[] args) throws Exception{
         if (args.length == 0) {
-            args = new String[] { "build/classes/com/codename1/tools/ikvm/tests/TestClass.class"};
+            Files.copy(new File("/Users/shannah/cn1_files/CodenameOne-git/CodenameOne/dist/CodenameOne.jar").toPath(), new File("dist/TSTCodenameOne.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
+            args = new String[] { "build/classes/com/codename1/tools/ikvm/tests/TestClass.class", "dist/TSTCodenameOne.jar"};
         }
         for (String arg : args) {
             parse(arg);
@@ -54,12 +55,19 @@ public class IKVMClassPreprocessor {
                 Enumeration<? extends ZipEntry> entries = zip.entries();
                 while (entries.hasMoreElements()) {
                     ZipEntry entry = entries.nextElement();
-                    zos.putNextEntry(entry);
+                    ZipEntry newEntry = new ZipEntry(entry.getName());
+                    zos.putNextEntry(newEntry);
                     InputStream zis = zip.getInputStream(entry);
-                    if (entry.getName().endsWith(".class")) {
-                        Parser.parse(zis, zos);
-                    } else {
-                        Parser.copy(zis, zos, 8192);
+                    try {
+                        if (entry.getName().endsWith(".class")) {
+                            //System.out.println("Parsing entry "+entry);
+                            Parser.parse(zis, zos);
+                        } else {
+                            //System.out.println("Copying entry "+entry);
+                            Parser.copy(zis, zos, 8192);
+                        }
+                    } finally {
+                        zis.close();
                     }
                     zos.closeEntry();
                 }

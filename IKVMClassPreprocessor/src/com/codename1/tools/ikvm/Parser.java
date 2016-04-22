@@ -30,6 +30,7 @@ import org.objectweb.asm.tree.VarInsnNode;
  */
 public class Parser {
     //ClassNode classNode;
+    static boolean changed = false;
     
     /**
      * Parses an input stream with a class file, and writes the transformed class
@@ -40,12 +41,8 @@ public class Parser {
      * @throws Exception 
      */
     public static void parse(InputStream input, OutputStream output) throws Exception {
-        byte[] bytes = parse(input);
-        if (bytes != null) {
-            output.write(bytes);
-        } else {
-            copy(input, output, 8192);
-        }
+        output.write(parse(input));
+        
     }
     
     /**
@@ -172,13 +169,18 @@ public class Parser {
             }
         }
         if (!methodsToAdd.isEmpty()) {
+            changed = true;
             System.out.println("Transforming "+methodsToAdd.size()+" synchronized methods in "+classNode.name);
             classNode.methods.addAll(methodsToAdd);
             ClassWriter w = new ClassWriter(0);
             classNode.accept(w);
             return w.toByteArray();
+        } else {
+            ClassWriter w = new ClassWriter(0);
+            classNode.accept(w);
+            return w.toByteArray();
         }
-        return null;
+        
     }
     
     /**
@@ -188,8 +190,9 @@ public class Parser {
      * @throws Exception 
      */
     public static void parse(File sourceFile) throws Exception {
+        changed = false;
         byte[] newBytes = parse(new FileInputStream(sourceFile));
-        if (newBytes != null) {
+        if (changed) {
             try (FileOutputStream fos = new FileOutputStream(sourceFile)) {
                 fos.write(newBytes);
             }
@@ -326,17 +329,14 @@ public class Parser {
      * large enoguh
      */
     public static void copy(InputStream i, OutputStream o, int bufferSize) throws IOException {
-        try {
+        
             byte[] buffer = new byte[bufferSize];
             int size = i.read(buffer);
             while (size > -1) {
                 o.write(buffer, 0, size);
                 size = i.read(buffer);
             }
-        } finally {
-            cleanup(o);
-            cleanup(i);
-        }
+        
     }
 
     /**
