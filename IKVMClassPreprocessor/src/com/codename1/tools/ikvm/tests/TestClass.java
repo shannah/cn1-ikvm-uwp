@@ -51,4 +51,37 @@ public class TestClass {
             
         }
     }
+    
+    public static synchronized void sfoobar() {
+        try {
+            int i =0;
+        } catch (Exception ex) {
+            
+        }
+    }
+    
+    public synchronized void foobarwarray(long l, long l2) {
+        try {
+            int i =0;
+        } catch (Exception ex) {
+            
+        }
+    }
+    public synchronized void foobarwarray(double l, double l2) {
+        try {
+            int i =0;
+        } catch (Exception ex) {
+            
+        }
+    }
+    
+    public synchronized void foobarwarray(double l, long l2, byte[] b1, int[] b2, Object foo, String bar) {
+        try {
+            int i =0;
+        } catch (Exception ex) {
+            
+        }
+    }
+
+
 }

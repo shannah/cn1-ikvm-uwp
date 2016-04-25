@@ -37,13 +37,20 @@ public class IKVMClassPreprocessor {
     public static void main(String[] args) throws Exception{
         String classPath = System.getProperty("preprocessor.class.path", null);
         
-        
+        System.out.println("Running IKVMClassPreprocessor");
+        System.out.println("preprocessor.class.path="+classPath);
         if (args.length == 0) {
-            Files.copy(new File("/Users/shannah/cn1_files/CodenameOne-git/CodenameOne/dist/CodenameOne.jar").toPath(), new File("dist/TSTCodenameOne.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
-            args = new String[] { "build/classes/com/codename1/tools/ikvm/tests/TestClass.class", "dist/TSTCodenameOne.jar"};
-            if (classPath == null) {
-                classPath = "/Users/shannah/cn1_files/CodenameOne-git/CodenameOne/dist/CodenameOne.jar";
+            try {
+                Files.copy(new File("/Users/shannah/cn1_files/CodenameOne-git/CodenameOne/dist/CodenameOne.jar").toPath(), new File("dist/TSTCodenameOne.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
+                //args = new String[] { "build/classes/com/codename1/tools/ikvm/tests/TestClass.class", "dist/TSTCodenameOne.jar"};
+                if (classPath == null) {
+                    classPath = "/Users/shannah/cn1_files/CodenameOne-git/CodenameOne/dist/CodenameOne.jar";
+                }
+            } catch (Exception ex){
+                System.err.println("Failed to copy test jars.  THis may not be steve's computer");
             }
+            Parser.verify = true;
+            args = new String[] { "build/classes/com/codename1/tools/ikvm/tests/TestClass.class", "dist/TSTCodenameOne.jar"};
         }
         
         ClassLoader classLoader = IKVMClassPreprocessor.class.getClassLoader();
@@ -77,42 +84,44 @@ public class IKVMClassPreprocessor {
                 throw ex;
             }
         } else if (f.exists() && f.getName().endsWith(".jar")) {
-            ZipFile zip = new ZipFile(f);
-            File tmpOut = File.createTempFile(f.getName(), ".jar");
-            ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(tmpOut));
-            try {
-                Enumeration<? extends ZipEntry> entries = zip.entries();
-                while (entries.hasMoreElements()) {
-                    ZipEntry entry = entries.nextElement();
-                    ZipEntry newEntry = new ZipEntry(entry.getName());
-                    zos.putNextEntry(newEntry);
-                    InputStream zis = zip.getInputStream(entry);
-                    try {
-                        if (entry.getName().endsWith(".class")) {
-                            //System.out.println("Parsing entry "+entry);
-                            try {
-                                Parser.parse(zis, zos, classLoader);
-                            } catch (VerifyException vex) {
-                                System.err.println("Failed to verify class "+entry.getName());
-                                throw vex;
+            File tmpOut;
+            try (ZipFile zip = new ZipFile(f)) {
+                tmpOut = File.createTempFile(f.getName(), ".jar");
+                ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(tmpOut));
+                try {
+                    Enumeration<? extends ZipEntry> entries = zip.entries();
+                    while (entries.hasMoreElements()) {
+                        ZipEntry entry = entries.nextElement();
+                        ZipEntry newEntry = new ZipEntry(entry.getName());
+                        zos.putNextEntry(newEntry);
+                        InputStream zis = zip.getInputStream(entry);
+                        try {
+                            if (entry.getName().endsWith(".class")) {
+                                //System.out.println("Parsing entry "+entry);
+                                try {
+                                    Parser.parse(zis, zos, classLoader);
+                                } catch (VerifyException vex) {
+                                    System.err.println("Failed to verify class "+entry.getName());
+                                    throw vex;
+                                }
+                            } else {
+                                //System.out.println("Copying entry "+entry);
+                                Parser.copy(zis, zos, 8192);
                             }
-                        } else {
-                            //System.out.println("Copying entry "+entry);
-                            Parser.copy(zis, zos, 8192);
+                        } finally {
+                            zis.close();
                         }
-                    } finally {
-                        zis.close();
+                        zos.closeEntry();
                     }
-                    zos.closeEntry();
+
+                } finally {
+                    try {
+                        zos.close();
+                    } catch (Exception ex){}
+                    
                 }
                 
-            } finally {
-                try {
-                    zos.close();
-                } catch (Exception ex){}
-                
             }
-            zip.close();
             Files.move(tmpOut.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } else {
             System.out.println("Skipping file "+f);

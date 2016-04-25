@@ -37,7 +37,7 @@ import org.objectweb.asm.util.CheckClassAdapter;
 public class Parser {
     //ClassNode classNode;
     static boolean changed = false;
-    private static boolean verify = true;
+    static boolean verify = Boolean.valueOf(System.getProperty("verify", "false"));
     
     /**
      * Parses an input stream with a class file, and writes the transformed class
@@ -93,11 +93,11 @@ public class Parser {
                     continue;
                 }
                 
-                System.out.println("Instructions: "+Arrays.toString(methodNode.instructions.toArray()));
+                //System.out.println("Instructions: "+Arrays.toString(methodNode.instructions.toArray()));
                 
                 
                 System.out.println("Transforming method "+methodNode.name+" of class "+classNode.name);
-                MethodDescriptor md = new MethodDescriptor(methodNode.name, methodNode.desc);
+                MethodDescriptor md = new MethodDescriptor(methodNode.access, methodNode.name, methodNode.desc);
                 //methodNode.access = methodNode.access & ~Opcodes.ACC_SYNCHRONIZED;
                 String privateMethodName = (md.constructor?"___cn1init__":methodNode.name) + "___cn1sync"+(methodNum);
                 MethodNode syncMethod = new MethodNode(
@@ -116,7 +116,10 @@ public class Parser {
                 
                 int argIndex=0;
                 if (!md.staticMethod) {
+                    //System.out.println(methodNode.name + " is not static");
+                    syncMethod.localVariables.add(new LocalVariableNode("arg"+(argIndex), "L"+classNode.name+";", null, startLabel, endLabel, argIndex));
                     syncMethod.instructions.add(new VarInsnNode(Opcodes.ALOAD, argIndex++));
+                    
                 }
                 
                 
@@ -126,7 +129,10 @@ public class Parser {
                     if (arg.dim > 0) {
                         typeChar = 'L';
                     }
-                    syncMethod.localVariables.add(new LocalVariableNode("arg"+(argIndex-1), arg.desc, null, startLabel, endLabel, argIndex-1));
+                    if (arg.desc == null || arg.desc.isEmpty()) {
+                        throw new RuntimeException("Invalid arg description for arg "+argIndex+" of method "+methodNode.name);
+                    }
+                    syncMethod.localVariables.add(new LocalVariableNode("arg"+(argIndex), arg.desc, arg.desc, startLabel, endLabel, argIndex));
                     
                     switch (typeChar) {
                         case 'L':
@@ -142,12 +148,14 @@ public class Parser {
                             break;
                         case 'J':
                             syncMethod.instructions.add(new VarInsnNode(Opcodes.LLOAD, argIndex++));
+                            argIndex++; // arg index increments 2 for double size args
                             break;
                         case 'F':
                             syncMethod.instructions.add(new VarInsnNode(Opcodes.FLOAD, argIndex++));
                             break;
                         case 'D':
                            syncMethod.instructions.add(new VarInsnNode(Opcodes.DLOAD, argIndex++));
+                           argIndex++;// arg index increments 2 for double size args
                             break;
                         default:
                             throw new IllegalArgumentException("Unsupported argument type "+arg.type);
@@ -205,7 +213,7 @@ public class Parser {
             changed = true;
             System.out.println("Transforming "+methodsToAdd.size()+" synchronized methods in "+classNode.name);
             classNode.methods.addAll(methodsToAdd);
-            ClassWriter w = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+            ClassWriter w = new ClassWriter(ClassWriter.COMPUTE_MAXS);
             classNode.accept(w);
             byte[] out = w.toByteArray();
             if (verify) {
@@ -273,7 +281,8 @@ public class Parser {
         boolean constructor;
         boolean staticMethod;
         
-        private MethodDescriptor(String methodName, String desc) {
+        private MethodDescriptor(int access, String methodName, String desc) {
+            staticMethod = (access & Opcodes.ACC_STATIC) == Opcodes.ACC_STATIC;
             int pos = desc.lastIndexOf(')');
             if(methodName.equals("<init>")) {
                 methodName = "__INIT__";
