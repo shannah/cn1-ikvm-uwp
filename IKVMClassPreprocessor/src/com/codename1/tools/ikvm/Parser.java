@@ -11,6 +11,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,9 +23,12 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
+import org.objectweb.asm.util.CheckClassAdapter;
 
 /**
  *
@@ -32,6 +37,7 @@ import org.objectweb.asm.tree.VarInsnNode;
 public class Parser {
     //ClassNode classNode;
     static boolean changed = false;
+    private static boolean verify = true;
     
     /**
      * Parses an input stream with a class file, and writes the transformed class
@@ -41,8 +47,8 @@ public class Parser {
      * @param output An output stream to write the transformed class to.
      * @throws Exception 
      */
-    public static void parse(InputStream input, OutputStream output) throws Exception {
-        output.write(parse(input));
+    public static void parse(InputStream input, OutputStream output, ClassLoader classLoader) throws Exception {
+        output.write(parse(input, classLoader));
         
     }
     
@@ -52,7 +58,7 @@ public class Parser {
      * @return If a transformation occurred, the bytes for the changed class will be returned.  Otherwise null will be returned.
      * @throws Exception 
      */
-    public static byte[] parse(InputStream input) throws Exception {
+    public static byte[] parse(InputStream input, ClassLoader classLoader) throws Exception {
         ClassReader r = new ClassReader(input);
         Parser p = new Parser();
         //ClassWriter w = new ClassWriter(r, 0);
@@ -102,11 +108,17 @@ public class Parser {
                 
                 methodNode.name = privateMethodName;
                 methodNode.access = (methodNode.access | Opcodes.ACC_PRIVATE) & ~Opcodes.ACC_PUBLIC & ~Opcodes.ACC_PROTECTED & ~Opcodes.ACC_SYNCHRONIZED;
-
+                LabelNode startLabel = new LabelNode();
+                syncMethod.instructions.add(startLabel);
+                LabelNode endLabel = new LabelNode();
+                
+                
+                
                 int argIndex=0;
                 if (!md.staticMethod) {
                     syncMethod.instructions.add(new VarInsnNode(Opcodes.ALOAD, argIndex++));
                 }
+                
                 
                 
                 for (ByteCodeMethodArg arg : md.arguments) {
@@ -114,9 +126,12 @@ public class Parser {
                     if (arg.dim > 0) {
                         typeChar = 'L';
                     }
+                    syncMethod.localVariables.add(new LocalVariableNode("arg"+(argIndex-1), arg.desc, null, startLabel, endLabel, argIndex-1));
+                    
                     switch (typeChar) {
                         case 'L':
                             syncMethod.instructions.add(new VarInsnNode(Opcodes.ALOAD, argIndex++));
+                            //syncMethod.localVariables.add(new LocalVariableNode("arg"+(argIndex-1), arg.desc, null, startLabel, endLabel, argIndex-1));
                             break;
                         case 'S':
                         case 'I':
@@ -171,7 +186,7 @@ public class Parser {
                            syncMethod.instructions.add(new InsnNode(Opcodes.DRETURN));
                             break;
                         case 'V':
-                            syncMethod.instructions.add(new InsnNode(Opcodes.DRETURN));
+                            syncMethod.instructions.add(new InsnNode(Opcodes.RETURN));
                             break;
                         default:
                             throw new IllegalArgumentException("Unsupported argument type "+md.returnType.type);
@@ -179,6 +194,8 @@ public class Parser {
                 } else {
                     syncMethod.instructions.add(new InsnNode(Opcodes.DRETURN));
                 }
+                
+                syncMethod.instructions.add(endLabel);
                 
                 methodsToAdd.add(syncMethod);
                 
@@ -190,11 +207,19 @@ public class Parser {
             classNode.methods.addAll(methodsToAdd);
             ClassWriter w = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
             classNode.accept(w);
-            return w.toByteArray();
+            byte[] out = w.toByteArray();
+            if (verify) {
+                verify(out, classLoader);
+            }
+            return out;
         } else {
             ClassWriter w = new ClassWriter(0);
             classNode.accept(w);
-            return w.toByteArray();
+            byte[] out = w.toByteArray();
+            if (verify) {
+                verify(out, classLoader);
+            }
+            return out;
         }
         
     }
@@ -205,9 +230,9 @@ public class Parser {
      * @param sourceFile A .class file to transform.
      * @throws Exception 
      */
-    public static void parse(File sourceFile) throws Exception {
+    public static void parse(File sourceFile, ClassLoader classLoader) throws Exception {
         changed = false;
-        byte[] newBytes = parse(new FileInputStream(sourceFile));
+        byte[] newBytes = parse(new FileInputStream(sourceFile), classLoader);
         if (changed) {
             try (FileOutputStream fos = new FileOutputStream(sourceFile)) {
                 fos.write(newBytes);
@@ -215,7 +240,21 @@ public class Parser {
         }
     }
 
-
+    public static class VerifyException extends Exception {
+        public VerifyException(String msg) {
+            super(msg);
+        }
+    }
+    
+    public static void verify(byte[] clazz, ClassLoader classLoader) throws VerifyException {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        CheckClassAdapter.verify(new ClassReader(clazz), classLoader, false, pw);
+        if (sw.toString().length() > 0) {
+           throw new VerifyException(sw.toString());
+        }
+    }
+    
    
     /*
     @Override
@@ -242,26 +281,31 @@ public class Parser {
             if(methodName.equals("<init>")) {
                 methodName = "__INIT__";
                 constructor = true;
-                returnType = new ByteCodeMethodArg('V', 0);
+                returnType = new ByteCodeMethodArg('V', 0, "V");
             } else {
                 if(methodName.equals("<clinit>")) {
                     methodName = "__CLINIT__";
-                    returnType = new ByteCodeMethodArg('V', 0);
+                    returnType = new ByteCodeMethodArg('V', 0, "V");
                     staticMethod = true;
                 } else {            
                     String retType = desc.substring(pos + 1);
                     if(retType.equals("V")) {
-                        returnType = new ByteCodeMethodArg('V', 0);
+                        returnType = new ByteCodeMethodArg('V', 0, "V");
                     } else {
                         int dim = 0;
                         while(retType.startsWith("[")) {
                             retType = retType.substring(1);
+                            
                             dim++;
                         }
                         char currentType = retType.charAt(0);
+                        String objectType = retType;
                         switch(currentType) {
                             case 'L':
-                                
+                                int idx = retType.indexOf(';');
+                                objectType = retType.substring(1, idx);
+                                returnType = new ByteCodeMethodArg(objectType, dim);
+                                break;
                             case 'I':
                                 
                             case 'J':
@@ -277,7 +321,7 @@ public class Parser {
                             case 'Z':
                                
                             case 'C':
-                                returnType = new ByteCodeMethodArg(currentType, dim);
+                                returnType = new ByteCodeMethodArg(currentType, dim, ""+currentType);
                                 break;
                         }
                     }
@@ -295,7 +339,10 @@ public class Parser {
                         continue;
                     case 'L':
                         int idx = desc.indexOf(';', i);
+                        String objectType = desc.substring(i, idx);
                         i = idx;
+                        arguments.add(new ByteCodeMethodArg(objectType, currentArrayDim));
+                        break;
                     case 'I':
                         
                     case 'J':
@@ -311,7 +358,7 @@ public class Parser {
                     case 'Z':
                         
                     case 'C':
-                        arguments.add(new ByteCodeMethodArg(currentType, currentArrayDim));
+                        arguments.add(new ByteCodeMethodArg(currentType, currentArrayDim, ""+currentType));
                         break;
                 }
                 currentArrayDim = 0;
@@ -324,15 +371,17 @@ public class Parser {
         boolean isPrimitive;
         int dim;
         char type;
-        
-        private ByteCodeMethodArg(char type, int dim) {
+        String desc;
+        private ByteCodeMethodArg(char type, int dim, String desc) {
             this.type = type;
             this.dim = dim;
+            this.desc = desc;
         }
         
         private ByteCodeMethodArg(String type, int dim) {
             this.type = 'L';
             this.dim = dim;
+            this.desc = type + (type.endsWith(";") ? "" : ";");
         }
     }
     

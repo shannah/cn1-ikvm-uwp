@@ -5,15 +5,21 @@
  */
 package com.codename1.tools.ikvm;
 
+import com.codename1.tools.ikvm.Parser.VerifyException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.StringTokenizer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -29,24 +35,47 @@ public class IKVMClassPreprocessor {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception{
+        String classPath = System.getProperty("preprocessor.class.path", null);
+        
+        
         if (args.length == 0) {
             Files.copy(new File("/Users/shannah/cn1_files/CodenameOne-git/CodenameOne/dist/CodenameOne.jar").toPath(), new File("dist/TSTCodenameOne.jar").toPath(), StandardCopyOption.REPLACE_EXISTING);
             args = new String[] { "build/classes/com/codename1/tools/ikvm/tests/TestClass.class", "dist/TSTCodenameOne.jar"};
+            if (classPath == null) {
+                classPath = "/Users/shannah/cn1_files/CodenameOne-git/CodenameOne/dist/CodenameOne.jar";
+            }
         }
+        
+        ClassLoader classLoader = IKVMClassPreprocessor.class.getClassLoader();
+        if (classPath != null) {
+            List<URL> urls = new ArrayList<URL>();
+            StringTokenizer tok = new StringTokenizer(classPath, File.pathSeparator);
+            while (tok.hasMoreTokens()) {
+                urls.add(new File(tok.nextToken()).toURL());
+            }
+            classLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]), classLoader);
+            
+        }
+        
         for (String arg : args) {
-            parse(arg);
+            parse(arg, classLoader);
         }
     }
     
     
-    private static void parse(String arg) throws Exception {
+    private static void parse(String arg, ClassLoader classLoader) throws Exception {
         File f = new File(arg);
         if (f.isDirectory()) {
             for (File child : f.listFiles()) {
-                parse(child.getAbsolutePath());
+                parse(child.getAbsolutePath(), classLoader);
             }
         } else if (f.exists() && f.getName().endsWith(".class")) {
-            Parser.parse(f);
+            try {
+                Parser.parse(f, classLoader);
+            } catch (VerifyException ex) {
+                System.err.println("Failed to verify class "+f);
+                throw ex;
+            }
         } else if (f.exists() && f.getName().endsWith(".jar")) {
             ZipFile zip = new ZipFile(f);
             File tmpOut = File.createTempFile(f.getName(), ".jar");
@@ -61,7 +90,12 @@ public class IKVMClassPreprocessor {
                     try {
                         if (entry.getName().endsWith(".class")) {
                             //System.out.println("Parsing entry "+entry);
-                            Parser.parse(zis, zos);
+                            try {
+                                Parser.parse(zis, zos, classLoader);
+                            } catch (VerifyException vex) {
+                                System.err.println("Failed to verify class "+entry.getName());
+                                throw vex;
+                            }
                         } else {
                             //System.out.println("Copying entry "+entry);
                             Parser.copy(zis, zos, 8192);
