@@ -216,9 +216,6 @@ public class Parser {
             ClassWriter w = new ClassWriter(0);
             classNode.accept(w);
             byte[] out = w.toByteArray();
-            if (verify) {
-                verify(out, classLoader);
-            }
             return out;
         }
         
