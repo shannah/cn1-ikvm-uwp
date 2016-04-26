@@ -33,7 +33,7 @@ namespace IKVM.Reflection
 		IList<CustomAttributeData> __GetCustomAttributes(Type attributeType, bool inherit);
 	}
 
-	[Serializable]
+	//[Serializable]
 	public sealed class FileFormatLimitationExceededException : InvalidOperationException
 	{
 		public const int META_E_STRINGSPACE_FULL = unchecked((int)0x80131198);
@@ -55,7 +55,7 @@ namespace IKVM.Reflection
 		}
 	}
 
-	[Serializable]
+	//[Serializable]
 	public sealed class Missing : ISerializable
 	{
 		public static readonly Missing Value = new Missing();
@@ -67,7 +67,7 @@ namespace IKVM.Reflection
 			info.SetType(typeof(SingletonSerializationHelper));
 		}
 
-		[Serializable]
+		//[Serializable]
 		private sealed class SingletonSerializationHelper : IObjectReference
 		{
 			public object GetRealObject(StreamingContext context)

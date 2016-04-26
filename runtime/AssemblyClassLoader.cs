@@ -899,8 +899,11 @@ namespace IKVM.Internal
 #if !STATIC_COMPILER && !STUB_GENERATOR && !FIRST_PASS
 		private TypeWrapper DefineDynamic(string name, java.net.URL url)
 		{
-			using (java.io.InputStream inp = url.openStream())
+            java.io.InputStream inp = null;
+            try  
+            //using (java.io.InputStream inp = url.openStream())
 			{
+                inp = url.openStream();
 				byte[] buf = new byte[inp.available()];
 				for (int pos = 0; pos < buf.Length; )
 				{
@@ -912,7 +915,13 @@ namespace IKVM.Internal
 					pos += read;
 				}
 				return TypeWrapper.FromClass(Java_java_lang_ClassLoader.defineClass1(GetJavaClassLoader(), name, buf, 0, buf.Length, GetProtectionDomain(), null));
-			}
+			} finally
+            {
+                if (inp != null)
+                {
+                    inp.close();
+                }
+            }
 		}
 #endif
 

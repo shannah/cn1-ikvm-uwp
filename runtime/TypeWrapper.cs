@@ -7686,6 +7686,23 @@ namespace IKVM.Internal
 namespace IKVM.Runtime
 {
 
+    public abstract class DebugHelper
+    {
+        private static DebugHelper _instance;
+        public static void setInstance(DebugHelper inst)
+
+        {
+            _instance = inst;
+        }
+
+        public static DebugHelper getInstance()
+        {
+            return _instance;
+        }
+
+
+    }
+
     public abstract class NativeThreadHelper
     {
         private static NativeThreadHelper _instance;

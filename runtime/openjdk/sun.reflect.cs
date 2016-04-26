@@ -643,9 +643,11 @@ static class Java_sun_reflect_ReflectionFactory
 		{
 			invocationTargetExceptionCtor = typeof(java.lang.reflect.InvocationTargetException).GetConstructor(new Type[] { typeof(Exception) });
 			illegalArgumentExceptionCtor = typeof(java.lang.IllegalArgumentException).GetConstructor(_Type.EmptyTypes);
-			get_TargetSite = typeof(Exception).GetMethod("get_TargetSite");
+#if !WINRT && false
+            get_TargetSite = typeof(Exception).GetMethod("get_TargetSite");
 			GetCurrentMethod = typeof(MethodBase).GetMethod("GetCurrentMethod");
-		}
+#endif
+        }
 
 		private sealed class RunClassInit
 		{
@@ -796,11 +798,16 @@ static class Java_sun_reflect_ReflectionFactory
 			ilgen.Emit(OpCodes.Dup);
 			ilgen.Emit(OpCodes.Isinst, typeof(java.lang.reflect.InvocationTargetException));
 			ilgen.EmitBrtrue(labelWrap);
-			ilgen.Emit(OpCodes.Dup);
+#if !WINRT && false
+            ilgen.Emit(OpCodes.Dup);
 			ilgen.Emit(OpCodes.Callvirt, get_TargetSite);
-			ilgen.Emit(OpCodes.Call, GetCurrentMethod);
-			ilgen.Emit(OpCodes.Ceq);
-			ilgen.EmitBrtrue(label);
+            ilgen.Emit(OpCodes.Call, GetCurrentMethod);
+            ilgen.Emit(OpCodes.Ceq);
+#else
+            ilgen.Emit(OpCodes.Ldc_I4_1);
+#endif
+
+            ilgen.EmitBrtrue(label);
 			ilgen.MarkLabel(labelWrap);
 			ilgen.Emit(OpCodes.Ldc_I4_0);
 			ilgen.Emit(OpCodes.Call, ByteCodeHelperMethods.mapException.MakeGenericMethod(Types.Exception));
@@ -919,11 +926,15 @@ static class Java_sun_reflect_ReflectionFactory
 			CodeEmitterLabel label2 = ilgen.DefineLabel();
 			ilgen.EmitLeave(label2);
 			ilgen.BeginCatchBlock(typeof(Exception));
-			ilgen.Emit(OpCodes.Dup);
+#if !WINRT && false
+            ilgen.Emit(OpCodes.Dup);
 			ilgen.Emit(OpCodes.Callvirt, FastMethodAccessorImpl.get_TargetSite);
 			ilgen.Emit(OpCodes.Call, FastMethodAccessorImpl.GetCurrentMethod);
 			ilgen.Emit(OpCodes.Ceq);
-			CodeEmitterLabel label = ilgen.DefineLabel();
+#else
+            ilgen.Emit(OpCodes.Ldc_I4_1);
+#endif
+            CodeEmitterLabel label = ilgen.DefineLabel();
 			ilgen.EmitBrtrue(label);
 			ilgen.Emit(OpCodes.Ldc_I4_0);
 			ilgen.Emit(OpCodes.Call, ByteCodeHelperMethods.mapException.MakeGenericMethod(Types.Exception));
@@ -1009,7 +1020,7 @@ static class Java_sun_reflect_ReflectionFactory
 	}
 #endif // !NO_REF_EMIT
 
-	sealed class ActivatorConstructorAccessor : sun.reflect.ConstructorAccessor
+        sealed class ActivatorConstructorAccessor : sun.reflect.ConstructorAccessor
 	{
 		private readonly Type type;
 

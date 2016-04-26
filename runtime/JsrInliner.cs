@@ -1349,10 +1349,10 @@ namespace IKVM.Internal
 				{
 					// specified constant pool entry doesn't contain a constant
 				}
-				catch (NullReferenceException)
-				{
-					// specified constant pool entry is empty (entry 0 or the filler following a wide entry)
-				}
+				//catch (NullReferenceException)
+				//{
+				//	// specified constant pool entry is empty (entry 0 or the filler following a wide entry)
+				//}
 				throw new VerifyError("Illegal constant pool index");
 			}
 

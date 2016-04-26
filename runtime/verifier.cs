@@ -4058,10 +4058,10 @@ sealed class MethodAnalyzer
 		{
 			// specified constant pool entry doesn't contain a constant
 		}
-		catch(NullReferenceException)
-		{
-			// specified constant pool entry is empty (entry 0 or the filler following a wide entry)
-		}
+		//catch(NullReferenceException)
+		//{
+		//	// specified constant pool entry is empty (entry 0 or the filler following a wide entry)
+		//}
 		throw new VerifyError("Illegal constant pool index");
 	}
 
@@ -4077,9 +4077,9 @@ sealed class MethodAnalyzer
 		catch(IndexOutOfRangeException)
 		{
 		}
-		catch(NullReferenceException)
-		{
-		}
+		//catch(NullReferenceException)
+		//{
+		//}
 		throw new VerifyError("Illegal constant pool index");
 	}
 

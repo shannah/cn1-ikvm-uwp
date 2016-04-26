@@ -186,6 +186,13 @@
             <arg path="mscorlib.jar;System.jar;System.Core.jar;System.Data.jar;System.Drawing.jar;System.XML.jar;../runtime/IKVM.Runtime.jar;../runtime/IKVM.UWPThreading.dll" />
             <arg value="@allsources.gen.lst" />
         </exec>
+        <exec program="java"  useruntimeengine="false">
+          <arg value="-jar"/>
+          <arg value="../IKVMClassPreprocessor/bin/IKVMClassPreprocessor.jar"/>
+          <arg dir="."/>
+          <arg dir="../classpath"/>
+          <arg dir="${OpenJDK.dir}"/>
+        </exec>
     </target>
 
     <target name="rmi">

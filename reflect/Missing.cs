@@ -27,7 +27,7 @@ using System.Runtime.InteropServices;
 
 namespace IKVM.Reflection
 {
-	[Serializable]
+	//[Serializable]
 	public sealed class MissingAssemblyException : InvalidOperationException
 	{
 		[NonSerialized]
@@ -50,7 +50,7 @@ namespace IKVM.Reflection
 		}
 	}
 
-	[Serializable]
+	//[Serializable]
 	public sealed class MissingModuleException : InvalidOperationException
 	{
 		[NonSerialized]

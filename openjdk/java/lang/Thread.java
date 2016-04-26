@@ -339,25 +339,25 @@ class Thread implements Runnable {
     
     private void leaveInterruptableWait() throws InterruptedException {
         // throw new Error("NotImplemented");
-        cli.System.Threading.ThreadInterruptedException dotnetInterrupt = null;
+        cli.System.Exception dotnetInterrupt = null;
         interruptableWait = false;
         for (; ; ) {
             try {
-                if (false) throw new cli.System.Threading.ThreadInterruptedException();
+                if (false) throw new cli.System.Exception();
                 synchronized (lock) {
                     if (nativeInterruptPending) {
                         nativeInterruptPending = false;
                         // HACK if there is a pending Interrupt (on the .NET thread), we need to consume that
                         // (if there was no contention on "lock (this)" above the interrupted state isn't checked) 
                         try {
-                            if (false) throw new cli.System.Threading.ThreadInterruptedException();
+                            if (false) throw new cli.System.Exception();
                             cli.IKVM.Runtime.NativeThread t = cli.IKVM.Runtime.NativeThreadHelper.getInstance().get_CurrentThread();
                             // the obvious thing to do would be t.Interrupt() / t.Join(),
                             // but for some reason that causes a regression in JSR166TestCase (probably a CLR bug)
                             // so we waste a time slice... sigh.
                             t.Join(1);
                         }
-                        catch (cli.System.Threading.ThreadInterruptedException _) {
+                        catch (cli.System.Exception _) {
                         }
                     }
                     if (interruptPending) {
@@ -367,7 +367,7 @@ class Thread implements Runnable {
                 }
                 break;
             }
-            catch (cli.System.Threading.ThreadInterruptedException x) {
+            catch (cli.System.Exception x) {
                 dotnetInterrupt = x;
                 nativeInterruptPending = false;
             }
@@ -402,14 +402,14 @@ class Thread implements Runnable {
         Thread c = currentThread();
         c.enterInterruptableWait(true);
         try {
-            if (false) throw new cli.System.Threading.ThreadInterruptedException();
+            if (false) throw new cli.System.Exception();
             for (long iter = millis / Integer.MAX_VALUE; iter != 0; iter--)
             {
                 cli.IKVM.Runtime.NativeThreadHelper.getInstance().Sleep(Integer.MAX_VALUE);
             }
             cli.IKVM.Runtime.NativeThreadHelper.getInstance().Sleep((int)(millis % Integer.MAX_VALUE));
         }
-        catch (cli.System.Threading.ThreadInterruptedException _) {
+        catch (cli.System.Exception _) {
         }
         finally {
             c.leaveInterruptableWait();
@@ -884,7 +884,9 @@ class Thread implements Runnable {
      * @see        #run()
      * @see        #stop()
      */
-    public synchronized void start() {
+
+    public synchronized void start() { _start();}
+    private  void _start() {
         /**
          * This method is not invoked for the main method thread or "system"
          * group threads created/set up by the VM. Any new functionality added
@@ -898,7 +900,9 @@ class Thread implements Runnable {
         /* Notify the group that this thread is about to be started
          * so that it can be added to the group's list of threads
          * and the group's unstarted count can be decremented. */
-        group.add(this);
+		if (group != null) {
+			group.add(this);
+	    }
 
         boolean started = false;
         try {

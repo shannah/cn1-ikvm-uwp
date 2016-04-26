@@ -26,7 +26,7 @@ using System.Runtime.Serialization;
 
 namespace IKVM.Reflection
 {
-	[Serializable]
+	//[Serializable]
 	public sealed class BadImageFormatException : Exception
 	{
 		public BadImageFormatException()

@@ -26,7 +26,7 @@ using System.Runtime.Serialization;
 
 namespace IKVM.Reflection
 {
-	[Serializable]
+	//[Serializable]
 	public sealed class AmbiguousMatchException : Exception
 	{
 		public AmbiguousMatchException()

@@ -792,9 +792,9 @@ namespace IKVM.Internal
 						throw new ClassFormatError("Invalid tag {0} in annotation element_value", tag);
 				}
 			}
-			catch (NullReferenceException)
-			{
-			}
+			//catch (NullReferenceException)
+			//{
+			//}
 			catch (InvalidCastException)
 			{
 			}

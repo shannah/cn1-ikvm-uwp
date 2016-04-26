@@ -78,7 +78,7 @@
             <arg value="clone"/>
             <arg value="https://github.com/shannah/cn1-ikvm-openjdk-8-b132.git"/>
             <arg value="../openjdk-8-b132"/>
-        </exec>
+        </exec> 
     </target>
     
     <target name="compile-all" depends="get-openjdk" description="Compile IKVM from source">

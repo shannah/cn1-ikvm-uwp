@@ -79,6 +79,8 @@ java/awt/image/RescaleOp.java
 java/io/DefaultFileSystem.java
 java/io/FileDescriptor.java
 java/io/FileInputStream.java
+java/io/InputStreamProxy.java
+java/io/OutputStreamProxy.java
 java/io/FileOutputStream.java
 java/io/InteropObjectInputStream.java
 java/io/InteropObjectOutputStream.java
