@@ -97,7 +97,7 @@
     <target name="create-release-zip" description="Create release zip for build server">
         <mkdir dir="dist"/>
         <zip file="dist/ikvm.zip">
-            <fileset dir="." includes="bin/**,LICENSE,THIRD_PARTY_README,TRADEMARK,HOWTO,cn1.build.version.txt"/>
+            <fileset dir="." includes="IKVMClassPreprocessor/bin/*.jar,bin/**,LICENSE,THIRD_PARTY_README,TRADEMARK,HOWTO,cn1.build.version.txt"/>
         </zip>
     </target>
     
