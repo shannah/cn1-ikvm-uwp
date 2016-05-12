@@ -31,6 +31,11 @@
 ../classpath/java/util/concurrent/atomic/Striped64.java
 ../classpath/sun/misc/Ref.java
 AssemblyInfo.java
+com/codename1/java/util/Calendar.java
+com/codename1/java/util/GregorianCalendar.java
+com/codename1/java/util/Locale.java
+com/codename1/java/util/TimeZone.java
+com/codename1/java/util/SimpleTimeZone.java
 com/sun/imageio/plugins/jpeg/JPEGImageReader.java
 com/sun/imageio/plugins/jpeg/JPEGImageWriter.java
 com/sun/java/util/jar/pack/PackageReader.java
