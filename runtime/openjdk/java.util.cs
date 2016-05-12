@@ -25,13 +25,16 @@ using System;
 
 static class Java_java_util_TimeZone
 {
+
+
+
     private static string GetCurrentTimeZoneID()
     {
 #if NET_4_0
 		return TimeZoneInfo.Local.Id;
 #else
         // we don't want a static dependency on System.Core (to be able to run on .NET 2.0)
-        Type typeofTimeZoneInfo = Type.GetType("System.TimeZoneInfo, System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
+        Type typeofTimeZoneInfo = IKVM.Internal.RuntimeReflectionHelper.Instance.getTimeZoneInfo();//Type.GetType("System.TimeZoneInfo, System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
         if (typeofTimeZoneInfo != null)
         {
             try
@@ -48,6 +51,7 @@ static class Java_java_util_TimeZone
                     // MONOBUG Mono's TimeZoneInfo.Local property throws a TimeZoneNotFoundException on Windows
                     // (https://bugzilla.novell.com/show_bug.cgi?id=622524)
 #if WINRT
+                    System.Diagnostics.Debug.Write("0: Couldn't get TimeZoneInfo type ");
                     throw new NotImplementedException();
 #else
                     return TimeZone.CurrentTimeZone.StandardName;
@@ -62,6 +66,7 @@ static class Java_java_util_TimeZone
         else
         {
 #if WINRT
+            System.Diagnostics.Debug.Write("Couldn't get TimeZoneInfo type ");
             throw new NotImplementedException();
 #else
             // HACK this is very lame and probably won't work on localized windows versions
@@ -332,20 +337,24 @@ static class Java_java_util_TimeZone
 	public static string getSystemGMTOffsetID()
 	{
 #if WINRT
+        System.Diagnostics.Debug.Write("Trying to get GMT offset ");
+        //TimeSpan sp = TimeZoneInfo.BaseUtcOffset;
         throw new NotImplementedException();
 #else
         TimeSpan sp = TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now);
+
         int hours = sp.Hours;
         int mins = sp.Minutes;
         if (hours >= 0 && mins >= 0)
         {
-            return String.Format("GMT+{0:D2}:{1:D2}", hours, mins);
+            return String.Format("GMT+{0:D2}:{1:D2}", new object[] {hours, mins});
         }
         else
         {
-            return String.Format("GMT-{0:D2}:{1:D2}", -hours, -mins);
+            return String.Format("GMT-{0:D2}:{1:D2}", new object[] {-hours, -mins});
         }
 #endif
     }
+
 }
 

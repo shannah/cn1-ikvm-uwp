@@ -525,7 +525,14 @@ namespace IKVM.Internal
             Profiler.Enter("LoadClassByDottedName");
 			try
 			{                
-				TypeWrapper type = LoadRegisteredOrPendingClass(name);
+
+                                
+				//TypeWrapper type = RuntimeReflectionHelper.Instance.LoadClassByDottedNameFast(name);
+                                //if (type != null) {
+                                //    return type;
+                                //}
+                                RuntimeReflectionHelper.Instance.Mark("Loading "+name);
+                                TypeWrapper type = LoadRegisteredOrPendingClass(name);
 
                 if (type != null)
 				{

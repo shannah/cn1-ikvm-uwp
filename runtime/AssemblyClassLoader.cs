@@ -87,6 +87,14 @@ namespace IKVM.Internal
             throw new NotImplementedException();
         }
 
+        public virtual Type getTimeZoneInfo() {
+            throw new NotImplementedException();
+        }
+
+        public virtual Type LoadClassByDottedNameFast(string name) {
+            throw new NotImplementedException();
+        }
+       
         public virtual ConstructorInfo GetConstructorImpl(Type type, Type[] types)
         {
             return null;//type.GetConstructor(types);

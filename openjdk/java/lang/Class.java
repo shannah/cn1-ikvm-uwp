@@ -1393,7 +1393,7 @@ public final class Class<T> implements java.io.Serializable,
         if (isArray())
             return getComponentType().getSimpleName()+"[]";
 
-        String simpleName = getSimpleBinaryName();
+        String simpleName = null; //getSimpleBinaryName();
         if (simpleName == null) { // top level class
             simpleName = getName();
             return simpleName.substring(simpleName.lastIndexOf(".")+1); // strip the package name
