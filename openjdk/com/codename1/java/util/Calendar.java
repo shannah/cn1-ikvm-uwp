@@ -15,7 +15,8 @@
  *  limitations under the License.
  */
 
-package java.util;
+package com.codename1.java.util;
+import java.util.Date;
 /**
  * Calendar is an abstract base class for converting between a Date object and a set of integer fields such as YEAR, MONTH, DAY, HOUR, and so on. (A Date object represents a specific instant in time with millisecond precision. See Date for information about the Date class.)
  * Subclasses of Calendar interpret a Date according to the rules of a specific calendar system.
@@ -27,7 +28,7 @@ package java.util;
  * This class has been subset for J2ME based on the JDK 1.3 Calendar class. Many methods and variables have been pruned, and other methods simplified, in an effort to reduce the size of this class.
  * Version: CLDC 1.1 02/01/2002 (based on JDK 1.3) See Also:Date, TimeZone
  */
-public abstract class Calendar{
+public abstract class Calendar extends java.util.Calendar {
     /**
      * This is the total number of fields in this calendar.
      */
@@ -330,7 +331,7 @@ public abstract class Calendar{
     
     private boolean isTimeSet;
     boolean areFieldsSet;
-    private TimeZone zone;
+    private java.util.TimeZone zone;
     
     /**
      * Constructs a Calendar with the default time zone.
@@ -338,6 +339,7 @@ public abstract class Calendar{
      */
     protected Calendar(){
         // default to the current time
+        super(false);
         zone = TimeZone.getDefault();
         fields = new int[FIELD_COUNT];
         isSet = new boolean[FIELD_COUNT];
@@ -397,7 +399,7 @@ public abstract class Calendar{
         return fields[field];
     }
 
-    void complete() {
+    protected void complete() {
         if (!isTimeSet) {
             computeTime();
             isTimeSet = true;
@@ -432,7 +434,7 @@ public abstract class Calendar{
     /**
      * Gets this Calendar's current time as a long expressed in milliseconds after January 1, 1970, 0:00:00 GMT (the epoch).
      */
-    protected long getTimeInMillis(){
+    public long getTimeInMillis(){
         if (!isTimeSet) {
             computeTime();
             isTimeSet = true;
@@ -493,7 +495,7 @@ public abstract class Calendar{
     /**
      * Sets this Calendar's current time from the given long value.
      */
-    protected void setTimeInMillis(long milliseconds){
+    public void setTimeInMillis(long milliseconds){
         if (!isTimeSet || !areFieldsSet || time != milliseconds) {
             time = milliseconds;
             isTimeSet = true;
@@ -510,7 +512,7 @@ public abstract class Calendar{
         areFieldsSet = false;
     }
 
-    int getFirstDayOfWeek() {
+    public int getFirstDayOfWeek() {
         return SUNDAY;
     }
 
@@ -522,5 +524,15 @@ public abstract class Calendar{
     public int getMinimalDaysInFirstWeek() {
         return minimalDaysInFirstWeek;
     }
+    
+    public int getLeastMaximum(int field) {
+        throw new UnsupportedOperationException();
+    }
+    
+    public int getGreatestMinimum(int field) {
+        throw new UnsupportedOperationException();
+    }
+    
+    
 }
 

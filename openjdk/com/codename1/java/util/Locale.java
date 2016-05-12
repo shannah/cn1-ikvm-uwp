@@ -22,22 +22,25 @@
  * need additional information or have any questions.
  */
 
-package java.util;
+package com.codename1.java.util;
+import java.util.Date;
 
 /**
  *
  * @author Shai Almog
  */
-public class Locale {
+public class Locale extends java.util.Locale {
     private static Locale defaultLocale;
     private String language;
     private String country;
     public Locale(String language, String locale) {
+        super(false);
         this.language = language;
         this.country = locale;
     }
     
     public Locale() {
+        super(false);
         language = getOSLanguage();
         int pos;
         if (language != null && (pos = language.indexOf('-')) != -1) {
@@ -72,6 +75,8 @@ public class Locale {
         return country;
     }
 
-    private static native String getOSLanguage();
+    private static String getOSLanguage() {
+        throw new UnsupportedOperationException();
+    }
     //private static native String getOSCountry();
 }

@@ -16,7 +16,10 @@
  *  limitations under the License.
  */
 
-package java.util;
+package com.codename1.java.util;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 /**
  * TimeZone represents a time zone offset, and also figures out daylight savings.
  * Typically, you get a TimeZone using getDefault which creates a TimeZone based on the time zone where the program is running. For example, for a program running in Japan, getDefault creates a TimeZone object based on Japanese Standard Time.
@@ -26,7 +29,7 @@ package java.util;
  * Apart from the methods and variables being subset, the semantics of the getTimeZone() method may also be subset: custom IDs such as "GMT-8:00" are not required to be supported.
  * Version: CLDC 1.1 02/01/2002 (Based on JDK 1.3) See Also:Calendar, Date
  */
-public abstract class TimeZone{
+public abstract class TimeZone extends java.util.TimeZone {
     /**
      * The short display name style, such as {@code PDT}. Requests for this
      * style may yield GMT offsets like {@code GMT-08:00}.
@@ -48,7 +51,7 @@ public abstract class TimeZone{
     public TimeZone(){         
     }
 
-    void setID(String id) {
+    public void setID(String id) {
         ID = id;
     }
     
@@ -63,11 +66,21 @@ public abstract class TimeZone{
             return new String[] {"GMT", i};
         }
     }
+    
+    public static java.lang.String[] getAvailableIDs(int offset) {
+        List<String> out = new ArrayList<String>();
+        for (String id : getAvailableIDs()) {
+            if (getTimezoneRawOffset(id) == offset ) {
+                out.add(id);
+            }
+        }
+        return out.toArray(new String[out.size()]);
+    }
 
-    private static native String getTimezoneId();
-    private static native int getTimezoneOffset(String name, int year, int month, int day, int timeOfDayMillis);
-    private static native int getTimezoneRawOffset(String name);
-    private static native boolean isTimezoneDST(String name, long millis);
+    private static String getTimezoneId() { throw new UnsupportedOperationException();}
+    private static  int getTimezoneOffset(String name, int year, int month, int day, int timeOfDayMillis){ throw new UnsupportedOperationException();}
+    private static  int getTimezoneRawOffset(String name) { throw new UnsupportedOperationException(); }
+    private static  boolean isTimezoneDST(String name, long millis) { throw new UnsupportedOperationException(); }
 
     /**
      * Gets the default TimeZone for this host. The source of the default TimeZone may vary with implementation.
@@ -86,7 +99,7 @@ public abstract class TimeZone{
                     return getTimezoneRawOffset(tzone);
                 }
 
-                boolean inDaylightTime(Date time) {
+                public boolean inDaylightTime(Date time) {
                     return isTimezoneDST(tzone, time.getTime());
                 }
 
@@ -100,12 +113,15 @@ public abstract class TimeZone{
         return defaultTimeZone;
     }
 
-    int getDSTSavings() {
+    public int getDSTSavings() {
         return useDaylightTime() ? 3600000 : 0;
     }
     
+    public void setRawOffset(int off) {
+        
+    }
     
-    boolean inDaylightTime(Date time) {
+    public boolean inDaylightTime(Date time) {
         return false;
     }
     

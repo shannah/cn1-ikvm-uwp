@@ -15,7 +15,8 @@
  *  limitations under the License.
  */
 
-package java.util;
+package com.codename1.java.util;
+import java.util.Date;
 
 class GregorianCalendar extends Calendar {
     /**
@@ -67,12 +68,12 @@ class GregorianCalendar extends Calendar {
     public GregorianCalendar() {
         setTimeZone(TimeZone.getDefault());
     }
-    public GregorianCalendar(TimeZone zone) {
+    public GregorianCalendar(java.util.TimeZone zone) {
         setTimeZone(zone);
     }
     
     protected void computeFields() {
-        TimeZone timeZone = getTimeZone();
+        java.util.TimeZone timeZone = getTimeZone();
         if(timeZone == null) {
             timeZone = TimeZone.getDefault();
             setTimeZone(timeZone);
@@ -665,7 +666,7 @@ class GregorianCalendar extends Calendar {
         }
     }
     
-    boolean isLenient() {
+    public boolean isLenient() {
         return true;
     }
 
@@ -730,7 +731,7 @@ class GregorianCalendar extends Calendar {
     }
 
     private int getOffset(long localTime) {
-        TimeZone timeZone = getTimeZone();
+        java.util.TimeZone timeZone = getTimeZone();
         if (!timeZone.useDaylightTime()) {
             return timeZone.getRawOffset();
         }
