@@ -35,6 +35,7 @@
     -resource:java/lang/invoke/MethodHandleImpl$BindCaller$T.class=@OPENJDK@/jdk/src/share/classes/java/lang/invoke/MethodHandleImpl$BindCaller$T.class
     -recurse:resources.zip/sun/util/resources/*
     ikvm/internal/*.class
+    com/codename1/java/util/*.class
     java/io/*.class
     java/lang/*.class
     java/lang/ref/*.class
