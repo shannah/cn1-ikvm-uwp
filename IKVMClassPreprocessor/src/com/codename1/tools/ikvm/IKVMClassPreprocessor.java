@@ -124,7 +124,7 @@ public class IKVMClassPreprocessor {
             }
             Files.move(tmpOut.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } else {
-            System.out.println("Skipping file "+f);
+            //System.out.println("Skipping file "+f);
         }
     }
 }
