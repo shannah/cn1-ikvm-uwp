@@ -77,10 +77,18 @@ public abstract class TimeZone extends java.util.TimeZone {
         return out.toArray(new String[out.size()]);
     }
 
-    private static String getTimezoneId() { throw new UnsupportedOperationException();}
-    private static  int getTimezoneOffset(String name, int year, int month, int day, int timeOfDayMillis){ throw new UnsupportedOperationException();}
-    private static  int getTimezoneRawOffset(String name) { throw new UnsupportedOperationException(); }
-    private static  boolean isTimezoneDST(String name, long millis) { throw new UnsupportedOperationException(); }
+    private static String getTimezoneId() { 
+        return cli.IKVM.Internal.RuntimeReflectionHelper.get_Instance().getTimezoneId();
+    }
+    private static  int getTimezoneOffset(String name, int year, int month, int day, int timeOfDayMillis){
+        return cli.IKVM.Internal.RuntimeReflectionHelper.get_Instance().getTimezoneOffset(name, year, month, day, timeOfDayMillis);
+    }
+    private static  int getTimezoneRawOffset(String name) {
+        return cli.IKVM.Internal.RuntimeReflectionHelper.get_Instance().getTimezoneRawOffset(name);
+    }
+    private static  boolean isTimezoneDST(String name, long millis) {
+        return cli.IKVM.Internal.RuntimeReflectionHelper.get_Instance().isTimezoneDST(name, millis);
+    }
 
     /**
      * Gets the default TimeZone for this host. The source of the default TimeZone may vary with implementation.

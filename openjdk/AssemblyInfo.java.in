@@ -24,8 +24,7 @@
 
 @cli.System.Reflection.AssemblyCopyrightAttribute.Annotation(
     "This software is licensed under the GNU General Public License version 2 + \"Classpath\" exception.\r\n" +
-    "See http://www.gnu.org/software/classpath/license.html for details.\r\n" +
-@COPYRIGHT@)
+    "See http://www.gnu.org/software/classpath/license.html for details.\r\n")
 
 @cli.System.Reflection.AssemblyTitleAttribute.Annotation("IKVM.NET OpenJDK Library for .NET")
 @cli.System.Reflection.AssemblyProductAttribute.Annotation("IKVM.NET")

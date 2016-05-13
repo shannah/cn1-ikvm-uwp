@@ -57,6 +57,24 @@ namespace IKVM.Internal
             set { _instance = value; }
         }
 
+
+        public virtual String getTimezoneId() { 
+            return "GMT";
+        }
+        public virtual  int getTimezoneOffset(string name, int year, int month, int day, int timeOfDayMillis){
+            return 0;
+        }
+        public virtual  int getTimezoneRawOffset(string name) {
+            return 0;
+        }
+        public virtual bool isTimezoneDST(string name, long millis) {
+            return true;
+        }
+
+        public virtual string getOSLanguage() {
+            return "en";
+        }
+
         public virtual Module[] GetModules(Assembly ass)
         {
             return null;

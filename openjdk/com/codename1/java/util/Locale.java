@@ -76,7 +76,7 @@ public class Locale extends java.util.Locale {
     }
 
     private static String getOSLanguage() {
-        throw new UnsupportedOperationException();
+        return cli.IKVM.Internal.RuntimeReflectionHelper.get_Instance().getOSLanguage();
     }
     //private static native String getOSCountry();
 }

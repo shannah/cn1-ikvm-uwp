@@ -44,8 +44,9 @@
     </target>
 
     <target name="copyright" depends="allsources.gen.lst">
-        <exec program="${project::get-base-directory()}/../tools/SourceLicenseAnalyzer.exe" output="copyright.txt" useruntimeengine="true" />
-        <loadfile file="copyright.txt" property="COPYRIGHT" />
+        <!--<exec program="${project::get-base-directory()}/../tools/SourceLicenseAnalyzer.exe" output="copyright.txt" useruntimeengine="true" />
+        <loadfile file="copyright.txt" property="COPYRIGHT" />-->
+        <property name="COPYRIGHT" value="Copyright"/>
     </target>
 
     <target name="allsources.gen.lst">
@@ -327,6 +328,7 @@
     </target>
     
     <target name="core" depends="version response.gen.txt MANIFEST.MF nashorn-version">
+    <!--<target name="core" depends="version" >-->
         <copy file="../bin/IKVM.Runtime.dll" todir="." />
         <copy file="../bin/IKVM.AWT.WinForms.dll" todir="." />
         <exec program="${project::get-base-directory()}/../bin/ikvmc.exe" useruntimeengine="true">
