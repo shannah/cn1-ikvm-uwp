@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-package com.codename1.java.util;
+package com.codename1.java0.util;
 import java.util.Date;
 /**
  * Calendar is an abstract base class for converting between a Date object and a set of integer fields such as YEAR, MONTH, DAY, HOUR, and so on. (A Date object represents a specific instant in time with millisecond precision. See Date for information about the Date class.)

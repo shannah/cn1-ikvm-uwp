@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-package com.codename1.java.util;
+package com.codename1.java0.util;
 import java.util.Date;
 
 class GregorianCalendar extends Calendar {

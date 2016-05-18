@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-package com.codename1.java.util;
+package com.codename1.java0.util;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

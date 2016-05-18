@@ -22,7 +22,7 @@
 // this implementation to leverage ICU4JNI.
 // END android-note
 
-package com.codename1.java.util;
+package com.codename1.java0.util;
 import java.util.Date;
 
 

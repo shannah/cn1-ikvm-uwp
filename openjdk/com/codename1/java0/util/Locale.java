@@ -22,7 +22,7 @@
  * need additional information or have any questions.
  */
 
-package com.codename1.java.util;
+package com.codename1.java0.util;
 import java.util.Date;
 
 /**
