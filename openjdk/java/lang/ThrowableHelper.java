@@ -208,7 +208,16 @@ final class ThrowableHelper {
      */
 
     public static void printStackTrace(Throwable _this) {
-        _this.printStackTrace(System.err);
+        //_this.printStackTrace(System.err);
+        cli.IKVM.Internal.RuntimeReflectionHelper.get_Instance().printStackTrace(_this);
+    }
+    
+    public static String getCurrentStackTrace() {
+        return cli.IKVM.Internal.RuntimeReflectionHelper.get_Instance().getCurrentStackTrace();
+    }
+    
+    public static void printStackTrace(String stackTraceString) {
+        System.err.println(stackTraceString);
     }
 
     /**
@@ -220,6 +229,10 @@ final class ThrowableHelper {
         printStackTrace(_this, new WrappedPrintStream(s));
     }
 
+    public static void printStackTrace(String stackTraceString, PrintStream s) {
+        new WrappedPrintStream(s).println(stackTraceString);
+    }
+    
     private static void printStackTrace(Throwable _this, PrintStreamOrWriter s) {
         // Guard against malicious overrides of Throwable.equals by
         // using a Set with identity equality semantics.
@@ -298,8 +311,13 @@ final class ThrowableHelper {
      */
     public static void printStackTrace(Throwable _this, PrintWriter s) {
         printStackTrace(_this, new WrappedPrintWriter(s));
+        //cli.IKVM.Internal.RuntimeReflectionHelper.get_Instance().printStackTrace(_this, s);
     }
 
+    public static void printStackTrace(String stackTraceString, PrintWriter s) {
+        new WrappedPrintWriter(s).println(stackTraceString);
+        //cli.IKVM.Internal.RuntimeReflectionHelper.get_Instance().printStackTrace(_this, s);
+    }
     /**
      * Wrapper class for PrintStream and PrintWriter to enable a single
      * implementation of printStackTrace.

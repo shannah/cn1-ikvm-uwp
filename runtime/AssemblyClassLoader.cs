@@ -71,6 +71,14 @@ namespace IKVM.Internal
             return true;
         }
 
+        public virtual void printStackTrace(Exception t) {
+            
+        }
+
+        public virtual String getCurrentStackTrace() {
+            return "";
+        }
+
         public virtual string getOSLanguage() {
             return "en";
         }

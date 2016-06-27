@@ -926,6 +926,7 @@
             <field name="UNASSIGNED_STACK" sig="[Ljava.lang.StackTraceElement;" modifiers="static final" />
             <field name="SUPPRESSED_SENTINEL" sig="Ljava.util.List;" modifiers="static final" />
             <field name="detailMessage" sig="Ljava.lang.String;" />
+            <field name="stackTraceString" sig="Ljava.lang.String;" />
             <field name="cause" sig="Ljava.lang.Throwable;" />
             <field name="original" sig="Ljava.lang.Throwable;" />
             <field name="stackTrace" sig="[Ljava.lang.StackTraceElement;" />
@@ -1033,6 +1034,9 @@
                     <pop />
                     <label name="skipFillInStackTrace" />
                     <!-- End fillInStackTrace call -->
+                    <ldarg_0 />
+                    <call class="java.lang.ThrowableHelper" name="getCurrentStackTrace" sig="()Ljava.lang.String;"/>
+                    <stfld class="java.lang.Throwable" name="stackTraceString" sig="Ljava.lang.String;" />
                     <ret />
                 </body>
             </constructor>
@@ -1067,6 +1071,10 @@
                     <ldarg_0 />
                     <ldarg_1 />
                     <stfld class="java.lang.Throwable" name="detailMessage" sig="Ljava.lang.String;" />
+                    <ldarg_0 />
+                    <call class="java.lang.ThrowableHelper" name="getCurrentStackTrace" sig="()Ljava.lang.String;"/>
+                    <stfld class="java.lang.Throwable" name="stackTraceString" sig="Ljava.lang.String;" />
+                    
                     <ret />
                 </body>
             </constructor>
@@ -1106,6 +1114,10 @@
                     <ldarg_0 />
                     <ldarg_2 />
                     <stfld class="java.lang.Throwable" name="cause" sig="Ljava.lang.Throwable;" />
+                    
+                    <ldarg_0 />
+                    <call class="java.lang.ThrowableHelper" name="getCurrentStackTrace" sig="()Ljava.lang.String;"/>
+                    <stfld class="java.lang.Throwable" name="stackTraceString" sig="Ljava.lang.String;" />
                     <ret />
                 </body>
             </constructor>
@@ -1148,6 +1160,9 @@
                     <ldarg_0 />
                     <ldarg_1 />
                     <stfld class="java.lang.Throwable" name="cause" sig="Ljava.lang.Throwable;" />
+                    <ldarg_0 />
+                    <call class="java.lang.ThrowableHelper" name="getCurrentStackTrace" sig="()Ljava.lang.String;"/>
+                    <stfld class="java.lang.Throwable" name="stackTraceString" sig="Ljava.lang.String;" />
                     <ret />
                 </body>
             </constructor>
@@ -1200,19 +1215,38 @@
                     <ldnull />
                     <stfld class="java.lang.Throwable" name="suppressedExceptions" sig="Ljava.util.List;" />
                     <label name="end" />
+                    <ldarg_0 />
+                    <call class="java.lang.ThrowableHelper" name="getCurrentStackTrace" sig="()Ljava.lang.String;"/>
+                    <stfld class="java.lang.Throwable" name="stackTraceString" sig="Ljava.lang.String;" />
                     <ret />
                 </body>
             </constructor>
             <method name="printStackTrace" sig="()V" modifiers="public">
-                <redirect class="java.lang.ThrowableHelper" sig="(Ljava.lang.Throwable;)V" type="static" />
+                <body>
+                    <ldarg_0 />
+                    <ldfld class="java.lang.Throwable" name="stackTraceString" sig="Ljava.lang.String;" />
+                    <call class="java.lang.ThrowableHelper" name="printStackTrace" sig="(Ljava.lang.String;)V" type="static" />
+                    <ret/>
+                </body>
             </method>
             <method name="printStackTrace" sig="(Ljava.io.PrintStream;)V" modifiers="public">
-                <parameter name="s" />
-                <redirect class="java.lang.ThrowableHelper" sig="(Ljava.lang.Throwable;Ljava.io.PrintStream;)V" type="static" />
+                <body>
+                    <ldarg_0 />
+                    <ldfld class="java.lang.Throwable" name="stackTraceString" sig="Ljava.lang.String;" />
+                    <ldarg_1/>
+                    <call class="java.lang.ThrowableHelper" name="printStackTrace" sig="(Ljava.lang.String;Ljava.io.PrintStream;)V" type="static" />
+                    <ret/>
+                </body>
             </method>
             <method name="printStackTrace" sig="(Ljava.io.PrintWriter;)V" modifiers="public">
-                <parameter name="s" />
-                <redirect class="java.lang.ThrowableHelper" sig="(Ljava.lang.Throwable;Ljava.io.PrintWriter;)V" type="static" />
+                <body>
+                    <ldarg_0 />
+                    <ldfld class="java.lang.Throwable" name="stackTraceString" sig="Ljava.lang.String;" />
+                    <ldarg_1/>
+                    <call class="java.lang.ThrowableHelper" name="printStackTrace" sig="(Ljava.lang.String;Ljava.io.PrintWriter;)V" type="static" />
+                    <ret/>
+                </body>
+                
             </method>
             <method name="getMessage" sig="()Ljava.lang.String;" modifiers="public">
                 <body>
