@@ -1210,7 +1210,7 @@
                     <ldarg_2 />
                     <stfld class="java.lang.Throwable" name="cause" sig="Ljava.lang.Throwable;" />
                     <ldarg_3 />
-                    <brtrue name="end" />
+                    <brtrue name="end" />is
                     <ldarg_0 />
                     <ldnull />
                     <stfld class="java.lang.Throwable" name="suppressedExceptions" sig="Ljava.util.List;" />
@@ -1259,6 +1259,13 @@
                     <callvirt class="cli.System.Exception" name="get_Message" sig="()Ljava.lang.String;" />
                     <ret />
                 </alternateBody>
+            </method>
+            <method name="getStackTraceString" sig="()Ljava.lang.String;" modifiers="public">
+                <body>
+                    <ldarg_0 />
+                    <ldfld class="java.lang.Throwable" name="stackTraceString" sig="Ljava.lang.String;" />
+                    <ret />
+                </body>
             </method>
             <method name="getLocalizedMessage" sig="()Ljava.lang.String;" modifiers="public">
                 <redirect class="cli.IKVM.Internal.ExceptionHelper" sig="(Ljava.lang.Throwable;)Ljava.lang.String;" type="static" />

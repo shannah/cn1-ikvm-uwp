@@ -57,6 +57,10 @@ namespace IKVM.Internal
             set { _instance = value; }
         }
 
+        public virtual void flushStream(System.IO.Stream stream) {
+            stream.Flush();
+        }
+
 
         public virtual String getTimezoneId() { 
             return "GMT";

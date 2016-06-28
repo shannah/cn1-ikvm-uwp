@@ -201,6 +201,7 @@ namespace IKVM.Internal
 #else
            // throw new NotImplementedException("2");
                 return null;
+                //return RuntimeReflectionHelper.Instance.getStackTrace(t);
 #endif
             }
 

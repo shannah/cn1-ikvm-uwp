@@ -68,7 +68,7 @@ class OutputStreamProxy extends OutputStream
             {
 				if (false) throw new cli.System.Exception();
                 synchronized (internalStream) {
-                    internalStream.Flush();
+                    cli.IKVM.Internal.RuntimeReflectionHelper.get_Instance().flushStream(internalStream);
 					}
             }
             catch (cli.System.Exception e)

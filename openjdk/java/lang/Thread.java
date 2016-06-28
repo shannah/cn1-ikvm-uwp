@@ -289,18 +289,40 @@ class Thread implements Runnable {
      */
     public final static int MAX_PRIORITY = 10;
 
+    private static Thread mainThread;
+    
     /**
      * Returns a reference to the currently executing thread object.
      *
      * @return  the currently executing thread.
      */
     public static Thread currentThread() {
-        Thread c = current;
-        if (c == null) {
-            c = new Thread(getMainThreadGroup());
+        Thread t = getThread(cli.IKVM.Runtime.NativeThreadHelper.getInstance().get_CurrentThread());
+        if (t == null) {
+            if (mainThread == null) {
+                mainThread = new Thread("Main");
+                mainThread.nativeThread = cli.IKVM.Runtime.NativeThreadHelper.getInstance().get_CurrentThread();
+            }
+            t = mainThread;
         }
-        return c;
+        return t;
+        
     }
+    
+    private static HashMap<cli.IKVM.Runtime.NativeThread,Thread> nativeThreadMap;
+    
+    private static HashMap<cli.IKVM.Runtime.NativeThread,Thread> getNativeThreadMap() {
+        if (nativeThreadMap == null) {
+            nativeThreadMap = new HashMap<cli.IKVM.Runtime.NativeThread,Thread>();
+        }
+        return nativeThreadMap;
+    }
+    
+    private static Thread getThread(cli.IKVM.Runtime.NativeThread nativeThread) {
+        return getNativeThreadMap().get(nativeThread);
+    }
+    
+    
     
     private static native ThreadGroup getMainThreadGroup();
 
@@ -484,7 +506,7 @@ class Thread implements Runnable {
 
         this.name = name.toCharArray();
 
-        Thread parent = currentThread();
+        Thread parent = "Main".equals(name) ? null : currentThread();
         SecurityManager security = System.getSecurityManager();
         if (g == null) {
             /* Determine if it's an applet or not */
@@ -497,8 +519,11 @@ class Thread implements Runnable {
 
             /* If the security doesn't have a strong opinion of the matter
                use the parent thread group. */
-            if (g == null) {
+            if (g == null && parent != null) {
                 g = parent.getThreadGroup();
+            }
+            if (g == null) {
+                g = getMainThreadGroup();
             }
         }
 
@@ -518,17 +543,19 @@ class Thread implements Runnable {
         g.addUnstarted();
 
         this.group = g;
-        this.daemon = parent.isDaemon();
-        this.priority = parent.getPriority();
-        if (isCCLOverridden(parent))
+        this.daemon = parent != null && parent.isDaemon();
+        this.priority = parent != null ? parent.getPriority() : NORM_PRIORITY;
+        if (parent != null && isCCLOverridden(parent))
             this.contextClassLoader = parent.getContextClassLoader();
-        else
+        else if (parent != null)
             this.contextClassLoader = parent.contextClassLoader;
+        //else 
+        //    this.contextClassLoader = null;
         //this.inheritedAccessControlContext =
         //        acc != null ? acc : AccessController.getLazyContext(parent.inheritedAccessControlContext);
         this.target = target;
         setPriority(priority);
-        if (parent.inheritableThreadLocals != null)
+        if (parent != null && parent.inheritableThreadLocals != null)
             this.inheritableThreadLocals =
                 ThreadLocal.createInheritedMap(parent.inheritableThreadLocals);
         /* Stash the specified stack size in case the VM cares */
@@ -947,6 +974,24 @@ class Thread implements Runnable {
         //     nativeThread.SetApartmentState(cli.System.Threading.ApartmentState.wrap(cli.System.Threading.ApartmentState.STA));
         // }
         threadStatus = 0x0005; // JVMTI_THREAD_STATE_ALIVE + JVMTI_THREAD_STATE_RUNNABLE
+        HashMap<cli.IKVM.Runtime.NativeThread, Thread> nthreads = getNativeThreadMap();
+        synchronized(nthreads) {
+            nthreads.put(nativeThread, this);
+            java.util.HashSet<cli.IKVM.Runtime.NativeThread> toRemove = new java.util.HashSet<cli.IKVM.Runtime.NativeThread>();
+            for (cli.IKVM.Runtime.NativeThread nthread : nthreads.keySet()) {
+                Thread t = nthreads.get(nthread);
+                switch (t.getState()) {
+                    case TERMINATED:
+                        toRemove.add(nthread);
+                }
+            }
+            for (cli.IKVM.Runtime.NativeThread o : toRemove) {
+                nthreads.remove(o);
+            }
+        }
+        getNativeThreadMap().put(nativeThread, this);
+        
+        
         nativeThread.Start();
         if (!daemon) {
              cli.System.Threading.Interlocked.Increment(nonDaemonCount);
@@ -2427,7 +2472,7 @@ class Thread implements Runnable {
     }
 
     private void stop0(Throwable x) {
-        throw new Error("NotImplemented");
+        throw new Error("stop0 NotImplemented");
         // synchronized (lock) {
         //     if (!running) {
         //         stillborn = x;
@@ -2475,7 +2520,7 @@ class Thread implements Runnable {
     }
 
     private void suspend0() {
-        throw new Error("NotImplemented");
+        throw new Error("suspend0 NotImplemented");
         // try {
         //     if (false) throw new cli.System.Threading.ThreadStateException();
         //     cli.System.Threading.Thread nativeThread = this.nativeThread;
@@ -2488,7 +2533,7 @@ class Thread implements Runnable {
     }
 
     private void resume0() {
-        throw new Error("NotImplemented");
+        throw new Error("resume0 NotImplemented");
         // try {
         //     if (false) throw new cli.System.Threading.ThreadStateException();
         //     cli.System.Threading.Thread nativeThread = this.nativeThread;
@@ -2501,7 +2546,7 @@ class Thread implements Runnable {
     }
 
     private void interrupt0() {
-        throw new Error("NotImplemented");
+        throw new Error("interrupt0 NotImplemented");
         //synchronized (lock) {
             // if the thread hasn't been started yet or has been terminated, the interrupt is ignored
             // (like on the reference implementation)
