@@ -925,22 +925,29 @@ namespace IKVM.Internal
 				if (t != null)
 				{
 					if (!unused && t.tracePart1 == null && t.tracePart2 == null && t.stackTrace == Throwable.UNASSIGNED_STACK)
-                    {
+                                        {
 #if !WINRT
-                        t.tracePart1 = new StackTrace(org, true);
-						t.tracePart2 = new StackTrace(true);
+                                            t.tracePart1 = new StackTrace(org, true);
+                                            t.tracePart2 = new StackTrace(true);
 #else
-      //                  t.tracePart1 = new StackTrace(org, true);
-						//t.tracePart2 = new StackTrace(true);
-         //   throw new NotImplementedException("koko") ;
+                                        
 #endif
-                    }
-                    if (t != org)
+                                        }
+                                        if (t != org)
 					{
 						t.original = org;
 						exceptions.remove(org);
 					}
-				}
+
+                                        //java.lang.System.@out.println("About to try to replace stacktrace in remap");
+                                        if (t.stackTraceString == null && org.StackTrace != null) {
+                                                //java.lang.System.@out.println("Replacing stack trace");
+                                                t.stackTraceString = org.StackTrace;
+                                        } else if (t.stackTraceString != null) {
+                                            //java.lang.System.@out.println("t stack trace is not null");
+                                            t.stackTraceString += "\nOriginating from:\nMessage=" + org.Message + "\n" + org.StackTrace;
+                                        } 
+                                }
 				else
 				{
 

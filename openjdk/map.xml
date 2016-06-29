@@ -1096,7 +1096,7 @@
                     <ldarg_2 />
                     <call type="System.Exception" name=".ctor" sig="(Ljava.lang.String;Ljava.lang.Throwable;)V" />
                     <ldarg_0 />
-                    <ldarg_0 />
+                    <ldarg_2 />
                     <stfld class="java.lang.Throwable" name="cause" sig="Ljava.lang.Throwable;" />
                     <!-- Start fillInStackTrace call -->
                     <ldsfld class="java.lang.Throwable" name="suppressFillInStackTrace" sig="Z" />
@@ -1138,7 +1138,7 @@
                     <ldarg_1 />
                     <call type="System.Exception" name=".ctor" sig="(Ljava.lang.String;Ljava.lang.Throwable;)V" />
                     <ldarg_0 />
-                    <ldarg_0 />
+                    <ldarg_1 />
                     <stfld class="java.lang.Throwable" name="cause" sig="Ljava.lang.Throwable;" />
                     <!-- Start fillInStackTrace call -->
                     <ldsfld class="java.lang.Throwable" name="suppressFillInStackTrace" sig="Z" />
