@@ -966,6 +966,7 @@ namespace IKVM.Internal
 						{
 							if(!FindMethod(methods, rmw.Name, rmw.Signature))
 							{
+                                                                Console.Error.WriteLine("Adding method {0}", rmw.Name);
 								methods.Add(new RemappedMethodWrapper(this, rmw.XmlMethod, map, true));
 							}
 						}
@@ -1205,6 +1206,7 @@ namespace IKVM.Internal
 						// When calling a final instance method on a remapped type from a class derived from a .NET class (i.e. a cli.System.Object or cli.System.Exception derived base class)
 						// then we can't call the java.lang.Object or java.lang.Throwable methods and we have to go through the instancehelper_ method. Note that since the method
 						// is final, this won't affect the semantics.
+                                                 Console.Error.WriteLine("Emitting method {0}", m.Name);
 						EmitCallvirt(ilgen);
 					}
 					else
@@ -1233,7 +1235,7 @@ namespace IKVM.Internal
 				internal override MethodBase DoLink()
 				{
 					RemapperTypeWrapper typeWrapper = (RemapperTypeWrapper)DeclaringType;
-
+                                         Console.Error.WriteLine("In  DoLink for  {0}", m.Name);
 					if(typeWrapper.IsInterface)
 					{
 						if(m.@override == null)
@@ -1892,6 +1894,10 @@ namespace IKVM.Internal
 					}
 					foreach(MethodInfo mi in typeBuilder.BaseType.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy))
 					{
+                                                if (mi.Name == "GetObjectData" || mi.Name == "get_TargetSite") {
+                                                    // ON UWP these methods cause problems for the .NET native compiler
+                                                    continue;
+                                                }
 						string key = MakeMethodKey(mi);
 						if(!methods.ContainsKey(key))
 						{
@@ -1926,18 +1932,18 @@ namespace IKVM.Internal
 					}
 					foreach(PropertyInfo pi in typeBuilder.BaseType.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static))
 					{
-						ParameterInfo[] paramInfo = pi.GetIndexParameters();
+                                                ParameterInfo[] paramInfo = pi.GetIndexParameters();
 						Type[] paramTypes = new Type[paramInfo.Length];
 						for(int i = 0; i < paramInfo.Length; i++)
 						{
 							paramTypes[i] = paramInfo[i].ParameterType;
 						}
 						PropertyBuilder pb = typeBuilder.DefineProperty(pi.Name, PropertyAttributes.None, pi.PropertyType, paramTypes);
-						if(pi.GetGetMethod() != null)
+						if(pi.GetGetMethod() != null && methods.ContainsKey(MakeMethodKey(pi.GetGetMethod())))
 						{
 							pb.SetGetMethod(methods[MakeMethodKey(pi.GetGetMethod())]);
 						}
-						if(pi.GetSetMethod() != null)
+						if(pi.GetSetMethod() != null && methods.ContainsKey(MakeMethodKey(pi.GetGetMethod())))
 						{
 							pb.SetSetMethod(methods[MakeMethodKey(pi.GetSetMethod())]);
 						}

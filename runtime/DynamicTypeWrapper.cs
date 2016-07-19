@@ -6022,7 +6022,7 @@ namespace IKVM.Internal
             {
 #if STATIC_COMPILER
 				private static readonly Type localRefStructType = StaticCompiler.GetRuntimeType("IKVM.Runtime.JNI+Frame");
-#elif FIRST_PASS
+#elif FIRST_PASS || WINRT
 				private static readonly Type localRefStructType = null;
 #else
                 private static readonly Type localRefStructType = JVM.LoadType(typeof(IKVM.Runtime.JNI.Frame));

@@ -1210,7 +1210,7 @@
                     <ldarg_2 />
                     <stfld class="java.lang.Throwable" name="cause" sig="Ljava.lang.Throwable;" />
                     <ldarg_3 />
-                    <brtrue name="end" />is
+                    <brtrue name="end" />
                     <ldarg_0 />
                     <ldnull />
                     <stfld class="java.lang.Throwable" name="suppressedExceptions" sig="Ljava.util.List;" />

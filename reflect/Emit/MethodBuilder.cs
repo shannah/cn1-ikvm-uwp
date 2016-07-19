@@ -74,6 +74,11 @@ namespace IKVM.Reflection.Emit
 
 		public ILGenerator GetILGenerator(int streamSize)
 		{
+                    if (this.name == "GetObjectData" ||this.name == "get_TargetSite") {
+                        Console.Error.WriteLine("GetILGenerator for {0}", this.name);
+                        Console.Error.WriteLine(Environment.StackTrace);
+                    }
+                    
 			if (rva != -1)
 			{
 				throw new InvalidOperationException();

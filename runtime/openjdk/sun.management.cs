@@ -72,7 +72,7 @@ static class Java_sun_management_MemoryImpl
 {
 	public static object getMemoryPools0()
 	{
-#if FIRST_PASS
+#if FIRST_PASS || WINRT
 		return null;
 #else
 		return new MemoryPoolMXBean[0];
@@ -81,7 +81,7 @@ static class Java_sun_management_MemoryImpl
 
 	public static object getMemoryManagers0()
 	{
-#if FIRST_PASS
+#if FIRST_PASS || WINRT
 		return null;
 #else
 		return new MemoryManagerMXBean[0];
@@ -90,7 +90,7 @@ static class Java_sun_management_MemoryImpl
 
 	public static object getMemoryUsage0(object impl, bool heap)
 	{
-#if FIRST_PASS
+#if FIRST_PASS || WINRT
 		return null;
 #else
 		long mem = System.GC.GetTotalMemory(false);

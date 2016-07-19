@@ -226,14 +226,18 @@ final class ThrowableHelper {
      * @param s {@code PrintStream} to use for output
      */
     public static void printStackTrace(Throwable _this, PrintStream s) {
-        printStackTrace(_this, new WrappedPrintStream(s));
+        //printStackTrace(_this, new WrappedPrintStream(s));
+        throw new UnsupportedOperationException("printStackTrace(Throwable,PrintStream)");
     }
 
     public static void printStackTrace(String stackTraceString, PrintStream s) {
-        new WrappedPrintStream(s).println(stackTraceString);
+        //new WrappedPrintStream(s).println(stackTraceString);
+        throw new UnsupportedOperationException("printStackTrace(String,PrintStream)");
     }
     
     private static void printStackTrace(Throwable _this, PrintStreamOrWriter s) {
+        throw new UnsupportedOperationException("printStackTrace(Throwable,PrintStreamOrWriter)");
+        /*
         // Guard against malicious overrides of Throwable.equals by
         // using a Set with identity equality semantics.
         Set<Throwable> dejaVu =
@@ -256,6 +260,8 @@ final class ThrowableHelper {
             if (ourCause != null)
                 printEnclosedStackTrace(ourCause, s, trace, CAUSE_CAPTION, "", dejaVu);
         }
+        */
+        //throw new UnsupportedOperationException("printStackTrace(Throwable,PrintStreamOrWriter)");
     }
 
     /**
@@ -267,6 +273,8 @@ final class ThrowableHelper {
                                          String caption,
                                          String prefix,
                                          Set<Throwable> dejaVu) {
+        throw new UnsupportedOperationException("printEnclosedStackTrace(Throwable,PrintStreamOrWriter,StackTraceElement[],String,String,Set<Throwable>)");
+        /*
         assert Thread.holdsLock(s.lock());
         if (dejaVu.contains(_this)) {
             s.println("\t[CIRCULAR REFERENCE:" + _this + "]");
@@ -298,6 +306,7 @@ final class ThrowableHelper {
             if (ourCause != null)
                 printEnclosedStackTrace(ourCause, s, trace, CAUSE_CAPTION, prefix, dejaVu);
         }
+        */
     }
 
     private static native StackTraceElement[] getOurStackTrace(Throwable _this);
@@ -310,12 +319,14 @@ final class ThrowableHelper {
      * @since   JDK1.1
      */
     public static void printStackTrace(Throwable _this, PrintWriter s) {
-        printStackTrace(_this, new WrappedPrintWriter(s));
+        throw new UnsupportedOperationException("printStackTrace(Throwable,PrintWriter");
+        //printStackTrace(_this, new WrappedPrintWriter(s));
         //cli.IKVM.Internal.RuntimeReflectionHelper.get_Instance().printStackTrace(_this, s);
     }
 
     public static void printStackTrace(String stackTraceString, PrintWriter s) {
-        new WrappedPrintWriter(s).println(stackTraceString);
+        throw new UnsupportedOperationException("printStackTrace(String,PrintWriter)");
+        //new WrappedPrintWriter(s).println(stackTraceString);
         //cli.IKVM.Internal.RuntimeReflectionHelper.get_Instance().printStackTrace(_this, s);
     }
     /**

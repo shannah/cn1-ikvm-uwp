@@ -938,7 +938,7 @@ namespace IKVM.Internal
 						t.original = org;
 						exceptions.remove(org);
 					}
-
+                                        
                                         //java.lang.System.@out.println("About to try to replace stacktrace in remap");
                                         if (t.stackTraceString == null && org.StackTrace != null) {
                                                 //java.lang.System.@out.println("Replacing stack trace");
@@ -946,7 +946,7 @@ namespace IKVM.Internal
                                         } else if (t.stackTraceString != null) {
                                             //java.lang.System.@out.println("t stack trace is not null");
                                             t.stackTraceString += "\nOriginating from:\nMessage=" + org.Message + "\n" + org.StackTrace;
-                                        } 
+                                        }                                        
                                 }
 				else
 				{
