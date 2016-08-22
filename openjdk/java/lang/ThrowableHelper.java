@@ -209,7 +209,8 @@ final class ThrowableHelper {
 
     public static void printStackTrace(Throwable _this) {
         //_this.printStackTrace(System.err);
-        cli.IKVM.Internal.RuntimeReflectionHelper.get_Instance().printStackTrace(_this);
+        //cli.IKVM.Internal.RuntimeReflectionHelper.get_Instance().printStackTrace(_this);
+        System.out.println("Throwable.printStackTrace is not currently supported");
     }
     
     public static String getCurrentStackTrace() {
@@ -227,16 +228,16 @@ final class ThrowableHelper {
      */
     public static void printStackTrace(Throwable _this, PrintStream s) {
         //printStackTrace(_this, new WrappedPrintStream(s));
-        throw new UnsupportedOperationException("printStackTrace(Throwable,PrintStream)");
+        System.out.println("Throwable.printStackTrace() is not currently supported.");
     }
 
     public static void printStackTrace(String stackTraceString, PrintStream s) {
         //new WrappedPrintStream(s).println(stackTraceString);
-        throw new UnsupportedOperationException("printStackTrace(String,PrintStream)");
+        System.out.println("Throwable.printStackTrace() not currently supported");
     }
     
     private static void printStackTrace(Throwable _this, PrintStreamOrWriter s) {
-        throw new UnsupportedOperationException("printStackTrace(Throwable,PrintStreamOrWriter)");
+        System.out.println("Throwable.printStackTrace() not currently supported.");
         /*
         // Guard against malicious overrides of Throwable.equals by
         // using a Set with identity equality semantics.
@@ -261,7 +262,6 @@ final class ThrowableHelper {
                 printEnclosedStackTrace(ourCause, s, trace, CAUSE_CAPTION, "", dejaVu);
         }
         */
-        //throw new UnsupportedOperationException("printStackTrace(Throwable,PrintStreamOrWriter)");
     }
 
     /**
@@ -273,7 +273,7 @@ final class ThrowableHelper {
                                          String caption,
                                          String prefix,
                                          Set<Throwable> dejaVu) {
-        throw new UnsupportedOperationException("printEnclosedStackTrace(Throwable,PrintStreamOrWriter,StackTraceElement[],String,String,Set<Throwable>)");
+        System.out.println("Throwable.printEnclosedStackTrace() not currently supported");
         /*
         assert Thread.holdsLock(s.lock());
         if (dejaVu.contains(_this)) {
@@ -319,13 +319,13 @@ final class ThrowableHelper {
      * @since   JDK1.1
      */
     public static void printStackTrace(Throwable _this, PrintWriter s) {
-        throw new UnsupportedOperationException("printStackTrace(Throwable,PrintWriter");
+        System.out.println("Thowable.printStackTrace() not currently supported");
         //printStackTrace(_this, new WrappedPrintWriter(s));
         //cli.IKVM.Internal.RuntimeReflectionHelper.get_Instance().printStackTrace(_this, s);
     }
 
     public static void printStackTrace(String stackTraceString, PrintWriter s) {
-        throw new UnsupportedOperationException("printStackTrace(String,PrintWriter)");
+        System.out.println("Throwale.printStackTrace() not currently supported");
         //new WrappedPrintWriter(s).println(stackTraceString);
         //cli.IKVM.Internal.RuntimeReflectionHelper.get_Instance().printStackTrace(_this, s);
     }

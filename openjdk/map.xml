@@ -1223,9 +1223,10 @@
             </constructor>
             <method name="printStackTrace" sig="()V" modifiers="public">
                 <body>
-                    <ldarg_0 />
+                    <!--<ldarg_0 />
                     <ldfld class="java.lang.Throwable" name="stackTraceString" sig="Ljava.lang.String;" />
                     <call class="java.lang.ThrowableHelper" name="printStackTrace" sig="(Ljava.lang.String;)V" type="static" />
+                    -->
                     <ret/>
                 </body>
             </method>
