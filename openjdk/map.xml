@@ -157,8 +157,11 @@
                     <call class="java.lang.Object" name="toStringImpl" sig="(Ljava.lang.Object;)Ljava.lang.String;" />
                     <br name="end" />
                     <label name="skip" />
+                    
                     <ldarg_0 />
-                    <callvirt type="System.Object" name="ToString" sig="()Ljava.lang.String;" />
+                    <!--<callvirt type="System.Object" name="ToString" sig="()Ljava.lang.String;" />-->
+                    <call class="java.lang.StringHelper" name="convertToString" sig="(Ljava.lang.Object;)Ljava.lang.String;"/>
+                    
                     <label name="end" />
                     <ret />
                 </alternateBody>

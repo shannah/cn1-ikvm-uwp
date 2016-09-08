@@ -2665,6 +2665,10 @@ final class StringHelper
     public static String valueOf(boolean b) {
         return b ? "true" : "false";
     }
+    
+    public static String convertToString(Object o) {
+        return cli.IKVM.Internal.RuntimeReflectionHelper.convertToString(o);
+    }
 
     /**
      * Returns the string representation of the {@code int} argument.

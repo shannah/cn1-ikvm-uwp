@@ -57,6 +57,15 @@ namespace IKVM.Internal
             set { _instance = value; }
         }
 
+        public static System.String convertToString(System.Object obj) {
+            return Instance.convertToStringImpl(obj);
+        }
+
+
+        public virtual System.String convertToStringImpl(System.Object obj) {
+            return obj == null ? "null" : obj.ToString();
+        }
+
         public virtual void flushStream(System.IO.Stream stream) {
             stream.Flush();
         }
