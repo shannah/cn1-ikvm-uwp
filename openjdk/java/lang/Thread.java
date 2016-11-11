@@ -2546,7 +2546,7 @@ class Thread implements Runnable {
     }
 
     private void interrupt0() {
-        throw new Error("interrupt0 NotImplemented");
+        //throw new Error("interrupt0 NotImplemented");
         //synchronized (lock) {
             // if the thread hasn't been started yet or has been terminated, the interrupt is ignored
             // (like on the reference implementation)

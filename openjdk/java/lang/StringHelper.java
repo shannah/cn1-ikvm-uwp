@@ -2669,6 +2669,14 @@ final class StringHelper
     public static String convertToString(Object o) {
         return cli.IKVM.Internal.RuntimeReflectionHelper.convertToString(o);
     }
+    
+    public static boolean checkEquals(Object a, Object b) {
+        return cli.IKVM.Internal.RuntimeReflectionHelper.checkEquals(a, b);
+    }
+    
+    public static int generateHashCode(Object o) {
+        return cli.IKVM.Internal.RuntimeReflectionHelper.generateHashCode(o);
+    }
 
     /**
      * Returns the string representation of the {@code int} argument.

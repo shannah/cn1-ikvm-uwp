@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.CopyOption;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -122,9 +123,26 @@ public class IKVMClassPreprocessor {
                 }
                 
             }
-            Files.move(tmpOut.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            try {
+                Files.move(tmpOut.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            } catch (FileAlreadyExistsException ex) {
+                if (f.isDirectory()) {
+                    delTree(f);
+                    tmpOut.renameTo(f);
+                }
+            }
         } else {
             //System.out.println("Skipping file "+f);
+        }
+    }
+    public static void delTree(File f) {
+        for (String current : f.list()) {
+            File ff = new File(f, current);
+            if (ff.isDirectory()) {
+                delTree(f);
+            }
+            ff.setWritable(true);
+            ff.delete();
         }
     }
 }

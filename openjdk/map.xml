@@ -173,6 +173,12 @@
             </method>
             <method name="hashCode" sig="()I" modifiers="public">
                 <override name="GetHashCode" />
+                <alternateBody>
+                    <ldarg_0 />
+                    <!--<callvirt type="System.Object" name="Equals" sig="(Ljava.lang.Object;)Z" />-->
+                    <call class="java.lang.StringHelper" name="generateHashCode" sig="(Ljava.lang.Object;)I"/>
+                    <ret />
+                </alternateBody>
                 <nonvirtualAlternateBody>
                     <ldarg_0 />
                     <call type="System.Runtime.CompilerServices.RuntimeHelpers" name="GetHashCode" sig="(Ljava.lang.Object;)I" />
@@ -191,7 +197,8 @@
                 <alternateBody>
                     <ldarg_0 />
                     <ldarg_1 />
-                    <callvirt type="System.Object" name="Equals" sig="(Ljava.lang.Object;)Z" />
+                    <!--<callvirt type="System.Object" name="Equals" sig="(Ljava.lang.Object;)Z" />-->
+                    <call class="java.lang.StringHelper" name="checkEquals" sig="(Ljava.lang.Object;Ljava.lang.Object;)Z"/>
                     <ret />
                 </alternateBody>
                 <nonvirtualAlternateBody>

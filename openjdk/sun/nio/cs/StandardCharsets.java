@@ -127,6 +127,7 @@ public class StandardCharsets
         "ISO_8859_1",
         "8859_1",
         "ISO8859-1",
+        "ISO-8859-1"
     };
 
     static final String[] aliases_ISO_8859_2 = new String[] {
@@ -544,7 +545,7 @@ public class StandardCharsets
             ht[671] = new Object[] { "8859_15", "iso-8859-15" };
             ht[676] = new Object[] { "ibm437", "ibm437" };
             ht[679] = new Object[] { "cp367", "us-ascii" };
-            ht[686] = new Object[] { "iso-10646-ucs-2", "utf-16be" };
+            ht[686] = new Object[] { "iso-10646-ucs-2", "utf-16be", "ISO-10646-1" };
             ht[703] = new Object[] { "ibm-437", "ibm437" };
             ht[710] = new Object[] { "iso8859-13", "iso-8859-13" };
             ht[712] = new Object[] { "iso8859-15", "iso-8859-15" };
@@ -675,11 +676,11 @@ public class StandardCharsets
                          new Object[] { "windows-1252", new MS1252(),
                              new Object[] { "utf-32be", null } } };
             ht[5] = new Object[] { "windows-1254", null,
-                         new Object[] { "utf-16", null } };
+                         new Object[] { "utf-16", new UTF_16() } };
             ht[6] = new Object[] { "windows-1257", null };
-            ht[7] = new Object[] { "utf-16be", null };
+            ht[7] = new Object[] { "utf-16be", new UTF_16BE() };
             ht[8] = new Object[] { "iso-8859-2", null,
-                         new Object[] { "iso-8859-1", null } };
+                         new Object[] { "iso-8859-1", new ISO_8859_1() } };
             ht[9] = new Object[] { "iso-8859-4", null,
                          new Object[] { "utf-8", new UTF_8() } };
             ht[10] = new Object[] { "iso-8859-5", null };
@@ -691,7 +692,7 @@ public class StandardCharsets
             ht[16] = new Object[] { "ibm852", null,
                          new Object[] { "ibm775", null } };
             ht[17] = new Object[] { "iso-8859-13", null,
-                         new Object[] { "us-ascii", null } };
+                         new Object[] { "us-ascii", new US_ASCII() } };
             ht[18] = new Object[] { "ibm855", null,
                          new Object[] { "ibm437", null,
                              new Object[] { "iso-8859-15", null } } };

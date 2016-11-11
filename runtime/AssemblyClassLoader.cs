@@ -66,6 +66,20 @@ namespace IKVM.Internal
             return obj == null ? "null" : obj.ToString();
         }
 
+        public static bool checkEquals(System.Object a, System.Object b) {
+            return Instance.checkEqualsImpl(a, b);
+        }
+        public virtual bool checkEqualsImpl(System.Object a, System.Object b) {
+            return a.Equals(b);
+        }
+
+        public static int generateHashCode(System.Object o) {
+            return Instance.generateHashCodeImpl(o);
+        }
+
+        public virtual int generateHashCodeImpl(System.Object o) {
+            return o.GetHashCode();
+        }
         public virtual void flushStream(System.IO.Stream stream) {
             stream.Flush();
         }
