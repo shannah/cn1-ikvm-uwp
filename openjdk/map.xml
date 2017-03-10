@@ -279,7 +279,7 @@
                 <newobj type="System.String" name=".ctor" sig="([C)V" />
                 <ret />
               </alternateBody>
-                <!--<redirect class="System.String, mscorlib" name="Copy" type="static" sig="(Ljava.lang.String;)Ljava.lang.String;" />-->
+                <redirect class="System.String, mscorlib" name="Copy" type="static" sig="(Ljava.lang.String;)Ljava.lang.String;" />
             </constructor>
             <constructor sig="(Ljava.lang.StringBuffer;)V" modifiers="public">
                 <parameter name="buffer" />
