@@ -36,6 +36,7 @@
     -recurse:resources.zip/sun/util/resources/*
     ikvm/internal/*.class
     com/codename1/java0/util/*.class
+    com/codename1/debug/*.class
     java/io/*.class
     java/lang/*.class
     java/lang/ref/*.class
@@ -193,7 +194,7 @@
 }
 {
     -out:IKVM.OpenJDK.Corba.dll
-    -baseaddress:0x57290000
+    -baseaddress:0x57EC0000
     -recurse:resources.zip/com/sun/corba/*
     -recurse:resources.zip/com/sun/jndi/cosnaming/jndiprovider.properties
     -resource:com/sun/corba/se/impl/logging/LogStrings.properties=C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/build/linux-x86_64-normal-server-release/jdk/classes/com/sun/corba/se/impl/logging/LogStrings.properties
@@ -314,7 +315,7 @@
 }
 {
     -out:IKVM.OpenJDK.XML.API.dll
-    -baseaddress:0x578C0000
+    -baseaddress:0x58940000
     -resource:META-INF/services/sun.util.spi.XmlPropertiesProvider=C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jdk/src/share/classes/sun/util/xml/META-INF/services/sun.util.spi.XmlPropertiesProvider
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jaxp/src/javax/xml/*.class
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jaxp/src/javax/xml/datatype/*.class
@@ -349,7 +350,7 @@
 }
 {
     -out:IKVM.OpenJDK.XML.XPath.dll
-    -baseaddress:0x57980000
+    -baseaddress:0x58A30000
     -recurse:resources.zip/com/sun/org/apache/xalan/internal/res/*
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jaxp/src/com/sun/org/apache/xalan/internal/extensions/*.class
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jaxp/src/com/sun/org/apache/xalan/internal/res/*.class
@@ -374,7 +375,7 @@
 }
 {
     -out:IKVM.OpenJDK.XML.Parse.dll
-    -baseaddress:0x57CE0000
+    -baseaddress:0x58EB0000
     -recurse:resources.zip/com/sun/org/apache/xerces/*
     -recurse:resources.zip/com/sun/org/apache/xml/internal/*
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jaxp/src/com/sun/org/apache/bcel/internal/util/SecuritySupport.class
@@ -436,7 +437,7 @@
 }
 {
     -out:IKVM.OpenJDK.XML.Transform.dll
-    -baseaddress:0x584F0000
+    -baseaddress:0x59C90000
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jaxp/src/com/sun/java_cup/internal/runtime/*.class
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jaxp/src/com/sun/org/apache/bcel/internal/*.class
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jaxp/src/com/sun/org/apache/bcel/internal/classfile/*.class
@@ -460,7 +461,7 @@
 }
 {
     -out:IKVM.OpenJDK.XML.Bind.dll
-    -baseaddress:0x58940000
+    -baseaddress:0x5A380000
     -recurse:resources.zip/javax/xml/bind/*
     -recurse:resources.zip/com/sun/xml/internal/bind/*
     -recurse:resources.zip/com/sun/xml/internal/fastinfoset/*
@@ -519,7 +520,7 @@
 }
 {
     -out:IKVM.OpenJDK.XML.WebServices.dll
-    -baseaddress:0x58D60000
+    -baseaddress:0x5A9E0000
     -recurse:resources.zip/com/sun/xml/internal/messaging/*
     -recurse:resources.zip/com/sun/xml/internal/ws/*
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jaxws/src/share/jaxws_classes/com/oracle/webservices/internal/api/*.class
@@ -660,7 +661,7 @@
 }
 {
     -out:IKVM.OpenJDK.XML.Crypto.dll
-    -baseaddress:0x59570000
+    -baseaddress:0x5B640000
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jdk/src/share/classes/com/sun/org/apache/xml/internal/security/*.class
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jdk/src/share/classes/com/sun/org/apache/xml/internal/security/algorithms/*.class
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jdk/src/share/classes/com/sun/org/apache/xml/internal/security/algorithms/implementations/*.class
@@ -696,7 +697,7 @@
 }
 {
     -out:IKVM.OpenJDK.SwingAWT.dll
-    -baseaddress:0x596F0000
+    -baseaddress:0x5B8E0000
     -remap:swingawt.xml
     -resource:META-INF/services/sun.java2d.pipe.RenderingEngine=resources/META-INF/services/sun.java2d.pipe.RenderingEngine
     -resource:META-INF/services/sun.java2d.cmm.CMMServiceProvider=C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jdk/src/share/classes/sun/java2d/cmm/lcms/META-INF/services/sun.java2d.cmm.CMMServiceProvider
@@ -796,14 +797,14 @@
 }
 {
     -out:IKVM.OpenJDK.Charsets.dll
-    -baseaddress:0x5A8F0000
+    -baseaddress:0x5D980000
     -resource:sun/nio/cs/ext/sjis0213.dat=C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/build/linux-x86_64-normal-server-release/jdk/gensrc/sun/nio/cs/ext/sjis0213.dat
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/build/linux-x86_64-normal-server-release/jdk/gensrc/sun/nio/cs/ext/*.class
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jdk/src/share/classes/sun/nio/cs/ext/*.class
 }
 {
     -out:IKVM.OpenJDK.Util.dll
-    -baseaddress:0x5AE00000
+    -baseaddress:0x5DF20000
     -recurse:resources.zip/com/sun/java/util/jar/pack/intrinsic.properties
     -recurse:resources.zip/sun/launcher/resources/*
     -resource:META-INF/services/java.nio.file.spi.FileSystemProvider=C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jdk/src/share/demo/nio/zipfs/src/META-INF/services/java.nio.file.spi.FileSystemProvider
@@ -829,7 +830,7 @@
 }
 {
     -out:IKVM.OpenJDK.Text.dll
-    -baseaddress:0x5B0D0000
+    -baseaddress:0x5E3D0000
     -recurse:resources.zip/sun/text/resources/*
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jdk/src/share/classes/java/text/*.class
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jdk/src/share/classes/java/text/spi/*.class
@@ -841,7 +842,7 @@
 }
 {
     -out:IKVM.OpenJDK.Security.dll
-    -baseaddress:0x5B280000
+    -baseaddress:0x5E640000
     -remap:security.xml
     sun/security/jgss/wrapper/*.class
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/build/linux-x86_64-normal-server-release/jdk/gensrc/sun/security/util/*.class
@@ -915,7 +916,7 @@
 }
 {
     -out:IKVM.OpenJDK.Management.dll
-    -baseaddress:0x5BA90000
+    -baseaddress:0x5F360000
     java/lang/management/*.class
     sun/management/*.class
     rmistubs/org/omg/stub/javax/management/remote/rmi/*.class
@@ -949,7 +950,7 @@
 }
 {
     -out:IKVM.OpenJDK.Misc.dll
-    -baseaddress:0x5BE20000
+    -baseaddress:0x5F8D0000
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/build/linux-x86_64-normal-server-release/jdk/gensrc/sun/misc/resources/*.class
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/corba/src/share/classes/javax/activity/*.class
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jaxws/src/share/jaxws_classes/javax/annotation/*.class
@@ -980,7 +981,7 @@
 }
 {
     -out:IKVM.OpenJDK.Naming.dll
-    -baseaddress:0x5BEE0000
+    -baseaddress:0x5F9C0000
     -recurse:resources.zip/com/sun/jndi/ldap/jndiprovider.properties
     -resource:META-INF/services/sun.net.spi.nameservice.NameServiceDescriptor=C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jdk/src/share/classes/sun/net/spi/nameservice/dns/META-INF/services/sun.net.spi.nameservice.NameServiceDescriptor
     sun/net/dns/*.class
@@ -1006,7 +1007,7 @@
 }
 {
     -out:IKVM.OpenJDK.Jdbc.dll
-    -baseaddress:0x5C060000
+    -baseaddress:0x5FC30000
     -resource:META-INF/services/java.sql.Driver=resources/META-INF/services/java.sql.Driver
     -recurse:resources.zip/com/sun/rowset/*
     -recurse:resources.zip/javax/sql/*
@@ -1023,7 +1024,7 @@
 }
 {
     -out:IKVM.OpenJDK.Remoting.dll
-    -baseaddress:0x5C1E0000
+    -baseaddress:0x5FE70000
     -recurse:resources.zip/sun/rmi/*
     rmistubs/com/sun/jndi/rmi/registry/*.class
     rmistubs/java/rmi/activation/*.class
@@ -1049,7 +1050,7 @@
 }
 {
     -out:IKVM.OpenJDK.Beans.dll
-    -baseaddress:0x5C300000
+    -baseaddress:0x60050000
     -resource:META-INF/mailcap.default=C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jaxws/src/share/jaf_classes/META-INF/mailcap.default
     -resource:META-INF/mimetypes.default=C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jaxws/src/share/jaf_classes/META-INF/mimetypes.default
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jaxws/src/share/jaf_classes/com/sun/activation/registries/*.class
@@ -1065,7 +1066,7 @@
 }
 {
     -out:IKVM.OpenJDK.Media.dll
-    -baseaddress:0x5C3F0000
+    -baseaddress:0x601D0000
     -resource:META-INF/services/javax.print.PrintServiceLookup=C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jdk/src/windows/classes/sun/print/services/javax.print.PrintServiceLookup
     -resource:META-INF/services/javax.print.StreamPrintServiceFactory=C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jdk/src/windows/classes/sun/print/services/javax.print.StreamPrintServiceFactory
     -resource:META-INF/services/javax.sound.midi.spi.MidiDeviceProvider=C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/jdk/src/share/classes/com/sun/media/sound/services/javax.sound.midi.spi.MidiDeviceProvider
@@ -1112,7 +1113,7 @@
 }
 {
     -out:IKVM.OpenJDK.Nashorn.dll
-    -baseaddress:0x5C630000
+    -baseaddress:0x605C0000
     -resource:META-INF/services/javax.script.ScriptEngineFactory=C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/nashorn/src/META-INF/services/javax.script.ScriptEngineFactory
     -resource:jdk/nashorn/internal/runtime/resources/version.properties=resources/nashorn/version.properties
     -recurse:C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/nashorn/src/*.js
@@ -1147,7 +1148,7 @@
 }
 {
     -out:IKVM.OpenJDK.Localedata.dll
-    -baseaddress:0x5CA50000
+    -baseaddress:0x60CB0000
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/build/linux-x86_64-normal-server-release/jdk/gensrc/sun/util/resources/*.class
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/build/linux-x86_64-normal-server-release/jdk/gensrc/sun/util/resources/ar/*.class
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/build/linux-x86_64-normal-server-release/jdk/gensrc/sun/util/resources/be/*.class
@@ -1248,7 +1249,7 @@
 }
 {
     -out:IKVM.OpenJDK.Cldrdata.dll
-    -baseaddress:0x5CF30000
+    -baseaddress:0x611C0000
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/build/linux-x86_64-normal-server-release/jdk/gensrc/sun/text/resources/cldr/*.class
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/build/linux-x86_64-normal-server-release/jdk/gensrc/sun/text/resources/cldr/aa/*.class
     C:\Users\steve\tests\CN1UWPPort\ikvm-uwp\ikvm-winrt-v3\openjdk/../../openjdk-8-b132/build/linux-x86_64-normal-server-release/jdk/gensrc/sun/text/resources/cldr/af/*.class

@@ -36,6 +36,7 @@ com/codename1/java0/util/GregorianCalendar.java
 com/codename1/java0/util/Locale.java
 com/codename1/java0/util/TimeZone.java
 com/codename1/java0/util/SimpleTimeZone.java
+com/codename1/debug/Debugger.java
 com/sun/imageio/plugins/jpeg/JPEGImageReader.java
 com/sun/imageio/plugins/jpeg/JPEGImageWriter.java
 com/sun/java/util/jar/pack/PackageReader.java
