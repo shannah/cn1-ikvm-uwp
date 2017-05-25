@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -34,10 +35,14 @@ import org.objectweb.asm.util.CheckClassAdapter;
  *
  * @author shannah
  */
-public class Parser {
+public class Parser implements Opcodes {
     //ClassNode classNode;
     static boolean changed = false;
     static boolean verify = Boolean.valueOf(System.getProperty("verify", "false"));
+    
+    // Optional flag to inject a tracer method for each line of Java code.
+    // See https://github.com/shannah/CN1UWPPort/wiki/Using-the-injectDebug-flag
+    static boolean injectDebugTracer = Boolean.valueOf(System.getProperty("injectDebug", "false"));
     
     /**
      * Parses an input stream with a class file, and writes the transformed class
@@ -50,6 +55,74 @@ public class Parser {
     public static void parse(InputStream input, OutputStream output, ClassLoader classLoader) throws Exception {
         output.write(parse(input, classLoader));
         
+    }
+    
+    public static ClassNode convertSynchronizedToMonitors(ClassNode classNode) {
+        ClassNode out = new ClassNode();
+        if (classNode.name.contains("Debugger") || classNode.name.contains("Delegate")) {
+            return classNode;
+        }
+        classNode.accept(new ClassVisitor(ASM5, out) {
+            @Override
+            public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+                return new MethodVisitor(Opcodes.ASM5, cv.visitMethod(access & ~Opcodes.ACC_SYNCHRONIZED , name, desc, signature, exceptions)) {
+                    Label start = new Label();    
+                    Label end = new Label();
+                    Label handler = new Label();
+                    @Override
+                    public void visitCode() {
+                        if ((access & Opcodes.ACC_SYNCHRONIZED) == 0 || (access & Opcodes.ACC_STATIC) != 0) {
+                            // for now let's leave static methods alone.
+                            super.visitCode();
+                        } else {
+                            mv.visitLabel(start);
+                            mv.visitTryCatchBlock(start, end, handler, null);
+                            mv.visitInsn(Opcodes.ICONST_0);
+                            mv.visitInsn(Opcodes.ALOAD);
+                            mv.visitInsn(Opcodes.MONITORENTER);
+                            super.visitCode();
+                            mv.visitLabel(end);
+                            mv.visitLabel(handler);
+                            mv.visitInsn(Opcodes.ICONST_0);
+                            mv.visitInsn(Opcodes.ALOAD);
+                            mv.visitInsn(Opcodes.MONITOREXIT);
+                            
+                        }
+                        
+                    }
+                    
+                    
+                };
+            }
+            
+        });
+        return out;
+    }
+    
+    public static ClassNode injectDebugging(ClassNode classNode) {
+        ClassNode out = new ClassNode();
+        if (classNode.name.contains("Debugger") || classNode.name.contains("Delegate")) {
+            return classNode;
+        }
+        classNode.accept(new ClassVisitor(ASM5, out) {
+            @Override
+            public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+                return new MethodVisitor(Opcodes.ASM5, cv.visitMethod(access, name, desc, signature, exceptions)) {
+                    @Override
+                    public void visitLineNumber(int i, Label label) {
+                        //System.out.println("Injecting debugging into "+classNode.name+"."+name);
+                        mv.visitLineNumber(i, label);
+                        mv.visitLdcInsn(classNode.name);
+                        mv.visitLdcInsn(name);
+                        mv.visitLdcInsn(i);
+                        mv.visitMethodInsn(Opcodes.INVOKESTATIC, "com/codename1/debug/Debugger", "visitLineNumber", "(Ljava/lang/String;Ljava/lang/String;I)V", false);
+                    }
+                    
+                };
+            }
+            
+        });
+        return out;
     }
     
     /**
@@ -66,6 +139,10 @@ public class Parser {
         //p.classNode = classNode;
         
         r.accept(classNode, 0);
+        if (injectDebugTracer) {
+            classNode = injectDebugging(classNode);
+            changed = true;
+        }
         //r.accept(p, ClassReader.EXPAND_FRAMES)
         
         
@@ -74,29 +151,31 @@ public class Parser {
         for (Object o : classNode.methods) {
             methodNum++;
             MethodNode methodNode = (MethodNode)o;
+            
+           
             boolean synchronizedMethod = (methodNode.access & Opcodes.ACC_SYNCHRONIZED) == Opcodes.ACC_SYNCHRONIZED;
-            if (synchronizedMethod) {
+            boolean abstractMethod = (methodNode.access & Opcodes.ACC_ABSTRACT) == ACC_ABSTRACT;
+            boolean nativeMethod = (methodNode.access & ACC_NATIVE) == ACC_NATIVE;
+            if (synchronizedMethod && !abstractMethod && !nativeMethod) {
                 // Check for a try statement
-                final boolean[] tryCatchFound = new boolean[1];
+                //final boolean[] tryCatchFound = new boolean[1];
                 //System.out.println("Found sync method "+methodNode.name+". Checking for try blocks");
-                methodNode.accept(new MethodVisitor(Opcodes.ASM5) {
-
-                    @Override
-                    public void visitTryCatchBlock(Label label, Label label1, Label label2, String string) {
-                        tryCatchFound[0] = true;
-                    }
-                    
-                    
-                    
-                });
-                if (!tryCatchFound[0]) {
-                    continue;
-                }
+                //methodNode.accept(new MethodVisitor(Opcodes.ASM5) {
+                //
+                //    @Override
+                //    public void visitTryCatchBlock(Label label, Label label1, Label label2, String string) {
+                //        tryCatchFound[0] = true;
+                //    }
+                //
+                //});
+                //if (!tryCatchFound[0]) {
+                //    continue;
+                //}
                 
                 //System.out.println("Instructions: "+Arrays.toString(methodNode.instructions.toArray()));
                 
                 
-                System.out.println("Transforming method "+methodNode.name+" of class "+classNode.name);
+                //System.out.println("Transforming method "+methodNode.name+" of class "+classNode.name);
                 MethodDescriptor md = new MethodDescriptor(methodNode.access, methodNode.name, methodNode.desc);
                 //methodNode.access = methodNode.access & ~Opcodes.ACC_SYNCHRONIZED;
                 String privateMethodName = (md.constructor?"___cn1init__":methodNode.name) + "___cn1sync"+(methodNum);
@@ -209,10 +288,12 @@ public class Parser {
                 
             }
         }
-        if (!methodsToAdd.isEmpty()) {
+        if (changed || !methodsToAdd.isEmpty()) {
             changed = true;
-            System.out.println("Transforming "+methodsToAdd.size()+" synchronized methods in "+classNode.name);
-            classNode.methods.addAll(methodsToAdd);
+            if (!methodsToAdd.isEmpty()) {
+                System.out.println("Transforming "+methodsToAdd.size()+" synchronized methods in "+classNode.name);
+                classNode.methods.addAll(methodsToAdd);
+            }
             ClassWriter w = new ClassWriter(ClassWriter.COMPUTE_MAXS);
             classNode.accept(w);
             byte[] out = w.toByteArray();

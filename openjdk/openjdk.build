@@ -190,6 +190,9 @@
         <exec program="java"  useruntimeengine="false">
           <arg value="-jar"/>
           <arg value="../IKVMClassPreprocessor/bin/IKVMClassPreprocessor.jar"/>
+          <!-- For debugging ONLY .. injects tracer function at each line of Java source 
+               See https://github.com/shannah/CN1UWPPort/wiki/Using-the-injectDebug-flag -->
+          <!--<arg value="-DinjectDebug=true"/>-->
           <arg dir="."/>
           <arg dir="../classpath"/>
           <arg dir="${OpenJDK.dir}"/>
